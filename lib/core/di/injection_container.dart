@@ -1,0 +1,120 @@
+// lib/core/di/injection_container.dart
+import 'package:admin_dashboard_graduation_project/core/network/api_service.dart';
+import 'package:admin_dashboard_graduation_project/features/auth/data/data_sources/auth_remote_data_source.dart';
+import 'package:admin_dashboard_graduation_project/features/auth/data/repos/auth_repo_impl.dart';
+import 'package:admin_dashboard_graduation_project/features/auth/domain/repos/auth_repo.dart';
+import 'package:admin_dashboard_graduation_project/features/auth/domain/use_cases/login_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/auth/domain/use_cases/resend_otp_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
+import 'package:admin_dashboard_graduation_project/features/dashboard/data/data_sources/dashboard_remote_data_source.dart';
+import 'package:admin_dashboard_graduation_project/features/dashboard/data/repositories/dashboard_repository_impl.dart';
+import 'package:admin_dashboard_graduation_project/features/dashboard/domain/repositories/dashboard_repository.dart';
+import 'package:admin_dashboard_graduation_project/features/dashboard/domain/use_cases/get_dashboard_overview_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/cubit/dashboard_cubit/dashboard_cubit.dart';
+import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/cubit/sidebar_cubit.dart';
+import 'package:admin_dashboard_graduation_project/features/doctor_verification/data/data_sources/doctor_verification_remote_data_source.dart';
+import 'package:admin_dashboard_graduation_project/features/doctor_verification/data/repositories/doctor_verification_repository_impl.dart';
+import 'package:admin_dashboard_graduation_project/features/doctor_verification/domain/repositories/doctor_verification_repository.dart';
+import 'package:admin_dashboard_graduation_project/features/doctor_verification/domain/use_cases/approve_verification_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/doctor_verification/domain/use_cases/get_verification_stats_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/doctor_verification/domain/use_cases/get_verifications_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/doctor_verification/domain/use_cases/reject_verification_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/doctor_verification/presentation/manager/doctor_verification_cubit/doctor_verification_cubit.dart';
+import 'package:admin_dashboard_graduation_project/features/users/data/data_sources/users_remote_data_source.dart';
+import 'package:admin_dashboard_graduation_project/features/users/data/repositories/users_repository_impl.dart';
+import 'package:admin_dashboard_graduation_project/features/users/domain/repositories/users_repository.dart';
+import 'package:admin_dashboard_graduation_project/features/users/domain/use_cases/block_users_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/users/domain/use_cases/get_user_status_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/users/domain/use_cases/get_users_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/users/domain/use_cases/suspend_users_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/users/domain/use_cases/unblock_users_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/users/domain/use_cases/unsuspend_users_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/users/presentation/manager/cubit/users_cubit.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get_it/get_it.dart';
+
+final sl = GetIt.instance;
+
+Future<void> init() async {
+  // 1. Core & Network (مرة واحدة بس لكل حاجة)
+  sl.registerLazySingleton(() => Dio());
+  sl.registerLazySingleton(() => const FlutterSecureStorage());
+  sl.registerLazySingleton(() => ApiService());
+
+  // 2. Auth Feature
+  sl.registerLazySingleton(() => AuthRemoteDataSource(sl<ApiService>()));
+  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
+  sl.registerLazySingleton(() => LoginUseCase(sl()));
+  sl.registerLazySingleton(() => ResendOtpUseCase(sl()));
+  sl.registerFactory(() => AuthCubit(sl(), sl()));
+
+  // 3. Dashboard Feature
+  // تأكد إن السطور دي موجودة مرة واحدة فقط!
+  sl.registerLazySingleton(
+    () => SidebarCubit(),
+  ); // الكيوبت اللي حل المشكلة اللي فاتت
+  // ⚠️ السطرين دول هما اللي ناقصين ومسببين المشكلة:
+  sl.registerLazySingleton(() => DashboardRemoteDataSource(sl<ApiService>()));
+  sl.registerLazySingleton<DashboardRepository>(
+    () => DashboardRepositoryImpl(sl()),
+  );
+  sl.registerLazySingleton(() => GetDashboardOverviewUseCase(sl()));
+  sl.registerFactory(() => DashboardCubit(sl()));
+
+  // 4. Users Feature
+  // Data Sources
+  sl.registerLazySingleton<UsersRemoteDataSource>(
+    () => UsersRemoteDataSourceImpl(sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(sl()));
+
+  // Use Cases
+  sl.registerLazySingleton(() => GetUsersUseCase(sl()));
+  sl.registerLazySingleton(() => BlockUserUseCase(sl()));
+  sl.registerLazySingleton(() => UnblockUserUseCase(sl()));
+  sl.registerLazySingleton(() => SuspendUserUseCase(sl()));
+  sl.registerLazySingleton(() => UnsuspendUserUseCase(sl()));
+  sl.registerLazySingleton(() => GetUserStatusUseCase(sl()));
+
+  // Cubit
+  sl.registerFactory(
+    () => UsersCubit(
+      getUsersUseCase: sl(),
+      blockUserUseCase: sl(),
+      unblockUserUseCase: sl(),
+      suspendUserUseCase: sl(),
+      unsuspendUserUseCase: sl(),
+      getUserStatusUseCase: sl(),
+    ),
+  );
+
+  // 5. Doctor Verification Feature
+  // Data Sources
+  sl.registerLazySingleton<DoctorVerificationRemoteDataSource>(
+    () => DoctorVerificationRemoteDataSourceImpl(sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<DoctorVerificationRepository>(
+    () => DoctorVerificationRepositoryImpl(sl()),
+  );
+
+  // Use Cases
+  sl.registerLazySingleton(() => GetVerificationsUseCase(sl()));
+  sl.registerLazySingleton(() => ApproveVerificationUseCase(sl()));
+  sl.registerLazySingleton(() => RejectVerificationUseCase(sl()));
+  sl.registerLazySingleton(() => GetVerificationStatsUseCase(sl()));
+
+  // Cubit
+  sl.registerFactory(
+    () => DoctorVerificationCubit(
+      getVerificationsUseCase: sl(),
+      approveUseCase: sl(),
+      rejectUseCase: sl(),
+      getStatsUseCase: sl(),
+    ),
+  );
+}

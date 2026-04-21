@@ -1,0 +1,18 @@
+// lib/features/dashboard/domain/entities/doctor_stats_entity.dart
+class DoctorStatsEntity {
+  final int totalDoctors;
+  final int verifiedDoctors;
+  final int pendingVerification;
+  final int rejectedDoctors;
+  final double averageRating;
+  final int totalReviews;
+
+  DoctorStatsEntity({
+    required this.totalDoctors,
+    required this.verifiedDoctors,
+    required this.pendingVerification,
+    required this.rejectedDoctors,
+    required this.averageRating,
+    required this.totalReviews,
+  });
+}
