@@ -2,7 +2,6 @@
 
 import 'package:admin_dashboard_graduation_project/core/network/api_service.dart';
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/data/models/doctor_verification_response_model.dart';
-import '../models/doctor_verification_model.dart';
 import '../models/verification_stats_model.dart';
 
 abstract class DoctorVerificationRemoteDataSource {

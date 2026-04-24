@@ -15,7 +15,7 @@ class DetailsHeader extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 35,
-          backgroundColor: Colors.teal.withOpacity(0.1),
+          backgroundColor: Colors.teal.withValues(alpha: 0.1),
           child: Text(
             user.fullName.substring(0, 1).toUpperCase(),
             style: const TextStyle(

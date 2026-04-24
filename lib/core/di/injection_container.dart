@@ -1,5 +1,6 @@
 // lib/core/di/injection_container.dart
 import 'package:admin_dashboard_graduation_project/core/network/api_service.dart';
+import 'package:admin_dashboard_graduation_project/core/services/signalr_service.dart';
 import 'package:admin_dashboard_graduation_project/features/auth/data/data_sources/auth_remote_data_source.dart';
 import 'package:admin_dashboard_graduation_project/features/auth/data/repos/auth_repo_impl.dart';
 import 'package:admin_dashboard_graduation_project/features/auth/domain/repos/auth_repo.dart';
@@ -20,6 +21,17 @@ import 'package:admin_dashboard_graduation_project/features/doctor_verification/
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/domain/use_cases/get_verifications_use_case.dart';
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/domain/use_cases/reject_verification_use_case.dart';
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/presentation/manager/doctor_verification_cubit/doctor_verification_cubit.dart';
+import 'package:admin_dashboard_graduation_project/features/support_tickets/data/data_sources/support_remote_data_source.dart';
+import 'package:admin_dashboard_graduation_project/features/support_tickets/data/repositories/support_repository_impl.dart';
+import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/repositories/support_repository.dart';
+import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/use_cases/get_support_stats_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/use_cases/get_ticket_messages_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/use_cases/get_tickets_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/use_cases/respond_to_ticket_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/use_cases/update_ticket_priority_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/use_cases/update_ticket_status_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/support_tickets/presentation/manager/support_chat_cubit/support_chat_cubit.dart';
+import 'package:admin_dashboard_graduation_project/features/support_tickets/presentation/manager/support_cubit/support_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/users/data/data_sources/users_remote_data_source.dart';
 import 'package:admin_dashboard_graduation_project/features/users/data/repositories/users_repository_impl.dart';
 import 'package:admin_dashboard_graduation_project/features/users/domain/repositories/users_repository.dart';
@@ -41,6 +53,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => Dio());
   sl.registerLazySingleton(() => const FlutterSecureStorage());
   sl.registerLazySingleton(() => ApiService());
+  sl.registerLazySingleton<SignalRService>(() => SignalRService());
 
   // 2. Auth Feature
   sl.registerLazySingleton(() => AuthRemoteDataSource(sl<ApiService>()));
@@ -115,6 +128,56 @@ Future<void> init() async {
       approveUseCase: sl(),
       rejectUseCase: sl(),
       getStatsUseCase: sl(),
+    ),
+  );
+
+  // 6. Support Tickets Feature
+  // 1. Data Sources
+  sl.registerLazySingleton<SupportRemoteDataSource>(
+    () => SupportRemoteDataSourceImpl(sl<ApiService>()),
+  );
+
+  // 2. Repositories
+  sl.registerLazySingleton<SupportRepository>(
+    () => SupportRepositoryImpl(sl<SupportRemoteDataSource>()),
+  );
+
+  // 3. Use Cases
+  sl.registerLazySingleton(() => GetTicketsUseCase(sl<SupportRepository>()));
+  sl.registerLazySingleton(
+    () => GetSupportStatsUseCase(sl<SupportRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => GetTicketMessagesUseCase(sl<SupportRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => RespondToTicketUseCase(sl<SupportRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => UpdateTicketStatusUseCase(sl<SupportRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => UpdateTicketPriorityUseCase(sl<SupportRepository>()),
+  );
+
+  // 4. Cubit
+  sl.registerFactory(
+    () => SupportCubit(
+      getTicketsUseCase: sl<GetTicketsUseCase>(),
+      getStatsUseCase: sl<GetSupportStatsUseCase>(),
+      updateStatusUseCase: sl<UpdateTicketStatusUseCase>(),
+      updatePriorityUseCase: sl<UpdateTicketPriorityUseCase>(),
+      signalRService: sl<SignalRService>(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => SupportChatCubit(
+      getMessagesUseCase: sl<GetTicketMessagesUseCase>(),
+      respondUseCase: sl<RespondToTicketUseCase>(),
+      updateStatusUseCase: sl<UpdateTicketStatusUseCase>(),
+      updatePriorityUseCase: sl<UpdateTicketPriorityUseCase>(),
+      signalRService: sl<SignalRService>(),
     ),
   );
 }

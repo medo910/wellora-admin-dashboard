@@ -10,6 +10,8 @@ import 'package:admin_dashboard_graduation_project/features/dashboard/presentati
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/pages/otp_page.dart';
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/presentation/manager/doctor_verification_cubit/doctor_verification_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/presentation/pages/doctor_verification_page.dart';
+import 'package:admin_dashboard_graduation_project/features/support_tickets/presentation/manager/support_cubit/support_cubit.dart';
+import 'package:admin_dashboard_graduation_project/features/support_tickets/presentation/pages/support_tickets_page.dart';
 import 'package:admin_dashboard_graduation_project/features/users/presentation/manager/cubit/users_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/users/presentation/pages/user_management_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +23,7 @@ class AppRouter {
   static const kOtp = '/otp'; // إضافة مسار الـ OTP
   static const kUsers = '/admin/users'; // 1. إضافة مسار المستخدمين
   static const kDoctorVerification = '/admin/doctor-verification';
+  static const kSupportTickets = '/admin/support-tickets';
 
   static final router = GoRouter(
     initialLocation: kDashboard,
@@ -97,6 +100,15 @@ class AppRouter {
                 create: (context) =>
                     sl<DoctorVerificationCubit>()..fetchVerificationData(),
                 child: const DoctorVerificationPage(),
+              );
+            },
+          ),
+          GoRoute(
+            path: kSupportTickets,
+            builder: (context, state) {
+              return BlocProvider(
+                create: (context) => sl<SupportCubit>()..fetchSupportData(),
+                child: const SupportTicketsPage(),
               );
             },
           ),

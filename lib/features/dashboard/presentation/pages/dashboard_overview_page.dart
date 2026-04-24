@@ -1,4 +1,11 @@
 // lib/features/dashboard/presentation/pages/dashboard_overview_page.dart
+import 'dart:developer';
+
+import 'package:admin_dashboard_graduation_project/core/di/injection_container.dart';
+import 'package:admin_dashboard_graduation_project/core/di/secure_storage_helper.dart';
+import 'package:admin_dashboard_graduation_project/core/di/session_manager.dart';
+import 'package:admin_dashboard_graduation_project/core/services/signalr_service.dart';
+import 'package:admin_dashboard_graduation_project/features/auth/data/data_sources/auth_remote_data_source.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/dashboard_overview_entity.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/cubit/dashboard_cubit/dashboard_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/cubit/dashboard_cubit/dashboard_state.dart';
@@ -8,89 +15,36 @@ import 'package:admin_dashboard_graduation_project/features/dashboard/presentati
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class DashboardOverviewPage extends StatelessWidget {
+class DashboardOverviewPage extends StatefulWidget {
   const DashboardOverviewPage({super.key});
 
+  @override
+  State<DashboardOverviewPage> createState() => _DashboardOverviewPageState();
+}
+
+class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
   // @override
-  // Widget build(BuildContext context) {
-  //   return BlocProvider(
-  //     create: (context) =>
-  //         sl<DashboardCubit>()..getOverview(), // استخدام sl لجلب الـ Cubit
-  //     child: BlocBuilder<DashboardCubit, DashboardState>(
-  //       builder: (context, state) {
-  //         if (state is DashboardLoading)
-  //           return const Center(child: CircularProgressIndicator());
+  @override
+  void initState() {
+    super.initState(); // 💡 دايماً ابدأ بـ super.initState()
 
-  //         return Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             const Text(
-  //               "Dashboard Overview",
-  //               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-  //             ),
-  //             const SizedBox(height: 24),
+    // نداء ميثود الـ Init في الخلفية
+    _setupSignalR();
+  }
 
-  //             // عرض الكروت في Grid مرن
-  //             GridView(
-  //               shrinkWrap: true,
-  //               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-  //                 maxCrossAxisExtent: 300,
-  //                 mainAxisExtent: 240,
-  //                 crossAxisSpacing: 20,
-  //                 mainAxisSpacing: 20,
-  //               ),
-  //               children: [
-  //                 StatCard(
-  //                   title: "Total Users",
-  //                   value: "24,892",
-  //                   change: 12.5,
-  //                   icon: Icons.people,
-  //                   chartColor: AppColors.primary,
-  //                 ),
-  //                 StatCard(
-  //                   title: "Active Doctors",
-  //                   value: "1,847",
-  //                   change: 8.2,
-  //                   icon: Icons.person_add,
-  //                   chartColor: AppColors.success,
-  //                 ),
-  //                 StatCard(
-  //                   title: "Pending Verifications",
-  //                   value: "38",
-  //                   change: -15.3,
-  //                   icon: Icons.verified_user,
-  //                   chartColor: AppColors.warning,
-  //                 ),
-  //                 StatCard(
-  //                   title: "Open Tickets",
-  //                   value: "142",
-  //                   change: 5.7,
-  //                   icon: Icons.confirmation_number,
-  //                   chartColor: AppColors.textMuted,
-  //                 ),
-  //               ],
-  //             ),
-
-  //             // هنا سنضيف لاحقاً الـ Main Charts والـ Recent Activity
-  //             const SizedBox(height: 24),
-  //             const RegistrationTrendsChart(), // الشارت الجديد
-  //             const SizedBox(height: 24),
-  //             Row(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Expanded(flex: 2, child: ActivityFeed()), // تغذية النشاطات
-  //                 const SizedBox(width: 24),
-  //                 Expanded(flex: 1, child: PlatformHealthCard()), // صحة النظام
-  //               ],
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
-
-  // lib/features/dashboard/presentation/pages/dashboard_overview_page.dart
+  void _setupSignalR() async {
+    try {
+      final token = await SecureStorageHelper.getAccessToken();
+      if (token != null) {
+        await sl<SignalRService>().init(token);
+        print("🚀 SignalR Initialized from Dashboard");
+      } else {
+        print("⚠️ No token found for SignalR");
+      }
+    } catch (e) {
+      print("❌ SignalR Init Error: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

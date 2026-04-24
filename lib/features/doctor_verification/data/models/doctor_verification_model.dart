@@ -51,24 +51,39 @@ class DoctorVerificationModel extends DoctorVerificationEntity {
     required super.overallStatus,
     required super.submittedAt,
     required super.documents,
+    required super.isReadyForReview,
+    required super.missingRequiredDocuments,
+    super.rejectionReason,
+    super.adminNotes,
+    super.reviewedByAdminName,
   });
+
+  // lib/features/doctor_verification/data/models/doctor_verification_model.dart
 
   factory DoctorVerificationModel.fromJson(Map<String, dynamic> json) {
     return DoctorVerificationModel(
       doctorId: json['doctorId'],
       doctorName: json['doctorName'] ?? "N/A",
       doctorEmail: json['doctorEmail'] ?? "N/A",
-      phoneNumber: json['phoneNumber'],
+      phoneNumber: json['phoneNumber'], // يقبل null عادي
       specialization: json['specialization'] ?? "General",
-      clinicLocation: json['clinicLocation'],
+      clinicLocation: json['clinicLocation'], // يقبل null عادي
       yearsOfExperience: json['yearsOfExperience'] ?? 0,
-      // 💡 استخدمنا 'requestStatus' اللي جاية من الباك إند
+
+      // 💡 المصدر الوحيد للحالة
       overallStatus: json['requestStatus'] ?? "Pending",
-      // سحبنا تاريخ التقديم من أول ورقة موجودة
-      submittedAt:
-          (json['verifications'] != null && json['verifications'].isNotEmpty)
-          ? json['verifications'][0]['submittedAt']
-          : DateTime.now().toIso8601String(),
+
+      // التاريخ موجود دلوقتي بره في جيسون الدكتور
+      submittedAt: json['submittedAt'] ?? DateTime.now().toIso8601String(),
+
+      isReadyForReview: json['isReadyForReview'] ?? false,
+      missingRequiredDocuments: List<String>.from(
+        json['missingRequiredDocuments'] ?? [],
+      ),
+      rejectionReason: json['rejectionReason'],
+      adminNotes: json['adminNotes'],
+      reviewedByAdminName: json['reviewedByAdminName'],
+
       documents:
           (json['verifications'] as List?)
               ?.map((doc) => VerificationDocumentModel.fromJson(doc))

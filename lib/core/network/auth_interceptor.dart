@@ -1,4 +1,6 @@
 // lib/core/network/auth_interceptor.dart
+import 'dart:developer';
+
 import 'package:admin_dashboard_graduation_project/core/di/secure_storage_helper.dart';
 import 'package:dio/dio.dart';
 
@@ -15,7 +17,7 @@ class AuthInterceptor extends Interceptor {
       options.headers['Authorization'] = 'Bearer $token'; // [cite: 84]
     }
 
-    print('➡️ [REQUEST] ${options.method} ${options.path}');
+    log('➡️ [REQUEST] ${options.method} ${options.path}');
     return handler.next(options);
   }
 }

@@ -24,41 +24,73 @@ class DoctorVerificationCubit extends Cubit<DoctorVerificationState> {
 
   int currentPage = 1;
   String? currentStatus;
+  VerificationStatsEntity? lastStats; // 💡 مخزن الإحصائيات عشان الـ UI ميفضاش
 
   // 1. جلب البيانات كاملة (الجدول + الإحصائيات)
   Future<void> fetchVerificationData({
-    int page = 1, // استلام رقم الصفحة، الديفولت 1
+    int? page,
     String? status,
     bool isRefresh = true,
   }) async {
     if (isRefresh) emit(DoctorVerificationLoading());
-    currentStatus = status;
+    if (page != null) currentPage = page;
+
+    if (status != null) {
+      currentStatus = (status == "All") ? null : status;
+    }
+
+    // currentPage = page ?? currentPage;
+    // currentStatus = (status == "All") ? null : (status ?? currentStatus);
 
     // بننادي الإحصائيات والبيانات مع بعض
     final statsResult = await getStatsUseCase();
     final listResult = await getVerificationsUseCase(
       page: currentPage,
-      status: status,
+      status: currentStatus,
     );
+
+    // statsResult.fold(
+    //   (failure) => emit(DoctorVerificationFailure(failure.errmessage)),
+    //   (stats) {
+    //     // listResult.fold(
+    //     //   (failure) => emit(DoctorVerificationFailure(failure.errmessage)),
+    //     //   (list) => emit(DoctorVerificationSuccess(list, stats)),
+    //     // );
+    //     listResult.fold(
+    //       (failure) => emit(DoctorVerificationFailure(failure.errmessage)),
+    //       (paginatedData) {
+    //         // هنا بنبعت كل المعلومات للـ State
+    //         emit(
+    //           DoctorVerificationSuccess(
+    //             verifications: paginatedData.data, // لستة الدكاترة
+    //             stats: stats,
+    //             page: currentPage,
+    //             hasNextPage:
+    //                 paginatedData.hasNextPage, // القيمة دي جاية من الـ API
+    //             totalItems: paginatedData.totalCount,
+    //             currentStatus: currentStatus,
+    //           ),
+    //         );
+    //       },
+    //     );
+    //   },
+    // );
 
     statsResult.fold(
       (failure) => emit(DoctorVerificationFailure(failure.errmessage)),
       (stats) {
-        // listResult.fold(
-        //   (failure) => emit(DoctorVerificationFailure(failure.errmessage)),
-        //   (list) => emit(DoctorVerificationSuccess(list, stats)),
-        // );
+        lastStats = stats; // 💡 بنحفظ آخر إحصائيات جت بنجاح
         listResult.fold(
           (failure) => emit(DoctorVerificationFailure(failure.errmessage)),
           (paginatedData) {
-            // هنا بنبعت كل المعلومات للـ State
             emit(
               DoctorVerificationSuccess(
-                verifications: paginatedData.data, // لستة الدكاترة
+                verifications: paginatedData.data,
                 stats: stats,
                 page: currentPage,
-                hasNextPage:
-                    paginatedData.hasNextPage, // القيمة دي جاية من الـ API
+                hasNextPage: paginatedData.hasNextPage,
+                totalItems: paginatedData.totalCount,
+                currentStatus: currentStatus,
               ),
             );
           },
@@ -72,10 +104,20 @@ class DoctorVerificationCubit extends Cubit<DoctorVerificationState> {
     emit(VerificationActionLoading());
     final result = await approveUseCase(doctorId, notes);
     result.fold(
-      (failure) => emit(VerificationActionFailure(failure.errmessage)),
+      (failure)
+      // => emit(VerificationActionFailure(failure.errmessage)),
+      {
+        // 💡 التشييك السحري: هل الكيوبت لسه مفتوح؟
+        if (!isClosed) emit(VerificationActionFailure(failure.errmessage));
+      },
       (msg) {
-        emit(VerificationActionSuccess(msg));
-        fetchVerificationData(status: currentStatus, isRefresh: false);
+        // emit(VerificationActionSuccess(msg));
+        // fetchVerificationData(status: currentStatus, isRefresh: false);
+        if (!isClosed) {
+          emit(VerificationActionSuccess(msg));
+          // تحديث البيانات بعد النجاح
+          fetchVerificationData(status: currentStatus, isRefresh: false);
+        }
       },
     );
   }
@@ -89,10 +131,20 @@ class DoctorVerificationCubit extends Cubit<DoctorVerificationState> {
       adminNotes: notes,
     );
     result.fold(
-      (failure) => emit(VerificationActionFailure(failure.errmessage)),
+      (failure)
+      // => emit(VerificationActionFailure(failure.errmessage)),
+      {
+        // 💡 التشييك السحري: هل الكيوبت لسه مفتوح؟
+        if (!isClosed) emit(VerificationActionFailure(failure.errmessage));
+      },
       (msg) {
-        emit(VerificationActionSuccess(msg));
-        fetchVerificationData(status: currentStatus, isRefresh: false);
+        // emit(VerificationActionSuccess(msg));
+        // fetchVerificationData(status: currentStatus, isRefresh: false);
+        if (!isClosed) {
+          emit(VerificationActionSuccess(msg));
+          // تحديث البيانات بعد النجاح
+          fetchVerificationData(status: currentStatus, isRefresh: false);
+        }
       },
     );
   }

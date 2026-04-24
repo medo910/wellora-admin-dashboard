@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/user_management_header.dart';
 import '../widgets/user_table_widget.dart';
-import '../../domain/entities/user_entity.dart';
 
 // class UserManagementPage extends StatefulWidget {
 //   const UserManagementPage({super.key});
@@ -207,10 +206,12 @@ class _UserManagementPageState extends State<UserManagementPage> {
 
     return BlocConsumer<UsersCubit, UsersState>(
       listener: (context, state) {
-        if (state is UserActionSuccess)
+        if (state is UserActionSuccess) {
           _showSnackBar(context, state.message, Colors.green);
-        if (state is UserActionFailure)
+        }
+        if (state is UserActionFailure) {
           _showSnackBar(context, state.errMessage, Colors.red);
+        }
       },
       builder: (context, state) {
         // 💡 شيلنا الـ SingleChildScrollView من هنا عشان الـ Expanded يشتغل

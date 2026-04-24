@@ -29,7 +29,7 @@ final List<NavItemModel> adminNavItems = [
   NavItemModel(
     title: "Support Tickets",
     icon: Icons.confirmation_number_outlined,
-    route: '/admin/tickets',
+    route: AppRouter.kSupportTickets,
   ),
   NavItemModel(
     title: "Review Moderation",

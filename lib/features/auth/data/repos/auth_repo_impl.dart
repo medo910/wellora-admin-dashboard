@@ -87,6 +87,8 @@
 // }
 
 // lib/features/auth/data/repositories/auth_repository_impl.dart
+import 'dart:developer';
+
 import 'package:admin_dashboard_graduation_project/core/di/secure_storage_helper.dart';
 import 'package:admin_dashboard_graduation_project/features/auth/domain/models/auth_token_model.dart';
 import 'package:admin_dashboard_graduation_project/features/auth/domain/models/login_response_model.dart';
@@ -208,7 +210,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, bool>> checkAccessValidity(String accessToken) async {
     try {
       final res = await remoteDataSource.checkToken();
-      print(res);
+      log(res.toString());
       return Right(res['summary'] == 'all_valid');
     } catch (e) {
       return const Right(false);

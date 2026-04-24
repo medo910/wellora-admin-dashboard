@@ -11,10 +11,10 @@ class VerificationStatsModel extends VerificationStatsEntity {
 
   factory VerificationStatsModel.fromJson(Map<String, dynamic> json) {
     return VerificationStatsModel(
-      total: json['totalVerifications'] ?? 0,
-      pending: json['pendingVerifications'] ?? 0,
-      approved: json['approvedVerifications'] ?? 0,
-      rejected: json['rejectedVerifications'] ?? 0,
+      total: json['totalDoctors'] ?? 0,
+      pending: json['pendingDoctors'] ?? 0,
+      approved: json['approvedDoctors'] ?? 0,
+      rejected: json['rejectedDoctors'] ?? 0,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:admin_dashboard_graduation_project/core/di/secure_storage_helper.dart';
@@ -59,7 +60,7 @@ class SessionManager {
       bool isOnline = await _hasInternet();
 
       if (!isOnline) {
-        print("🌐 Offline Mode: Tokens found, bypassing server check.");
+        log("🌐 Offline Mode: Tokens found, bypassing server check.");
 
         return SessionStatus.valid;
       }
@@ -80,7 +81,7 @@ class SessionManager {
         return SessionStatus.valid;
       }
 
-      print("⚠️ Access Token expired. Attempting to refresh...");
+      log("⚠️ Access Token expired. Attempting to refresh...");
 
       final refreshResult = await _authRepository.refreshToken(
         accessToken: accessToken,
@@ -90,7 +91,7 @@ class SessionManager {
 
       return await refreshResult.fold(
         (failure) async {
-          print("❌ Refresh failed: ${failure.errmessage}");
+          log("❌ Refresh failed: ${failure.errmessage}");
 
           await SecureStorageHelper.clearAll();
 
@@ -105,7 +106,7 @@ class SessionManager {
 
         (tokenModel) async {
           if (tokenModel is AuthTokenModel) {
-            print("✅ Token Refreshed!");
+            log("✅ Token Refreshed!");
 
             await _saveNewTokensAndUserData(tokenModel);
 
@@ -122,7 +123,7 @@ class SessionManager {
         },
       );
     } catch (e) {
-      print("❌ Session Manager Error: $e");
+      log("❌ Session Manager Error: $e");
 
       return SessionStatus.error;
     }
@@ -174,7 +175,7 @@ class SessionManager {
 
     _cachedRole = role;
 
-    print(
+    log(
       "💡 SessionManager: Memory Cache updated - ID: $id, Name: $name, Role: $role",
     );
   }

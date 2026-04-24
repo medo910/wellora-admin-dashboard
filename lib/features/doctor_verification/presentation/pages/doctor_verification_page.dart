@@ -274,21 +274,128 @@ class _DoctorVerificationPageState extends State<DoctorVerificationPage> {
     context.read<DoctorVerificationCubit>().fetchVerificationData();
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return BlocConsumer<DoctorVerificationCubit, DoctorVerificationState>(
+  //     listener: (context, state) {
+  //       if (state is VerificationActionSuccess) {
+  //         _showSnackBar(context, state.message, Colors.green);
+  //       }
+  //       if (state is VerificationActionFailure) {
+  //         _showSnackBar(context, state.errMessage, Colors.red);
+  //       }
+  //     },
+  //     builder: (context, state) {
+  //       return Scaffold(
+  //         backgroundColor: const Color(0xFFF8FAFC),
+  //         // الصفحة كلها بتسكرول من هنا
+  //         body: SingleChildScrollView(
+  //           child: Padding(
+  //             padding: const EdgeInsets.all(32),
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 const VerificationHeader(),
+  //                 const SizedBox(height: 32),
+
+  //                 if (state is DoctorVerificationLoading)
+  //                   const Center(
+  //                     child: Padding(
+  //                       padding: EdgeInsets.all(100.0),
+  //                       child: CircularProgressIndicator(),
+  //                     ),
+  //                   )
+  //                 else if (state is DoctorVerificationSuccess) ...[
+  //                   // الـ Spread Operator (...) بيفرط الودجيتس جوه الـ Column الأساسي
+  //                   VerificationStatsBar(stats: state.stats),
+  //                   const SizedBox(height: 32),
+  //                   VerificationTabsView(
+  //                     verifications: state.verifications,
+  //                     currentStatus: state.currentStatus,
+  //                   ),
+  //                   const SizedBox(height: 32),
+  //                   const PaginationBar(),
+  //                 ] else if (state is DoctorVerificationFailure)
+  //                   Center(child: Text(state.errMessage)),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<DoctorVerificationCubit, DoctorVerificationState>(
       listener: (context, state) {
-        if (state is VerificationActionSuccess) {
+        if (state is VerificationActionSuccess)
           _showSnackBar(context, state.message, Colors.green);
-        }
-        if (state is VerificationActionFailure) {
+        if (state is VerificationActionFailure)
           _showSnackBar(context, state.errMessage, Colors.red);
-        }
       },
+      // builder: (context, state) {
+      //   // 💡 السطر ده هو اللي هيحل لك أيرور الـ Undefined name
+      //   final cubit = context.read<DoctorVerificationCubit>();
+
+      //   return Scaffold(
+      //     backgroundColor: const Color(0xFFF8FAFC),
+      //     body: SingleChildScrollView(
+      //       child: Padding(
+      //         padding: const EdgeInsets.all(32),
+      //         child: Column(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           children: [
+      //             const VerificationHeader(),
+      //             const SizedBox(height: 32),
+
+      //             // 🚀 المنطق الذكي عشان التابات ماتختفيش واللون يفضل ثابت
+      //             if (state is DoctorVerificationSuccess ||
+      //                 state is VerificationActionLoading) ...[
+      //               // الإحصائيات (دايماً ظاهرة لو فيه داتا)
+      //               VerificationStatsBar(
+      //                 stats: state is DoctorVerificationSuccess
+      //                     ? state.stats
+      //                     : cubit.stats!,
+      //               ),
+      //               const SizedBox(height: 32),
+
+      //               // التابات (دايماً ظاهرة والـ currentStatus جاي من الكيوبت)
+      //               VerificationTabsView(
+      //                 verifications: state is DoctorVerificationSuccess
+      //                     ? state.verifications
+      //                     : [],
+      //                 currentStatus: state is DoctorVerificationSuccess
+      //                     ? state.currentStatus
+      //                     : cubit.currentStatus,
+      //               ),
+      //               const SizedBox(height: 32),
+      //               const PaginationBar(),
+      //             ]
+      //             // حالة التحميل (لو أول مرة خالص والصفحة لسه بيضاء)
+      //             else if (state is DoctorVerificationLoading &&
+      //                 cubit.currentPage == 1)
+      //               const Center(
+      //                 child: Padding(
+      //                   padding: EdgeInsets.all(100.0),
+      //                   child: CircularProgressIndicator(),
+      //                 ),
+      //               )
+      //             // حالة الفشل
+      //             else if (state is DoctorVerificationFailure)
+      //               Center(child: Text(state.errMessage)),
+      //           ],
+      //         ),
+      //       ),
+      //     ),
+      //   );
+      // },
       builder: (context, state) {
+        final cubit = context.read<DoctorVerificationCubit>();
+
         return Scaffold(
           backgroundColor: const Color(0xFFF8FAFC),
-          // الصفحة كلها بتسكرول من هنا
           body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(32),
@@ -298,21 +405,38 @@ class _DoctorVerificationPageState extends State<DoctorVerificationPage> {
                   const VerificationHeader(),
                   const SizedBox(height: 32),
 
-                  if (state is DoctorVerificationLoading)
+                  // 🚀 الشرط بقى أقوى: لو فيه داتا قديمة أو الحالة نجاح، اظهر التابات
+                  if (state is DoctorVerificationSuccess ||
+                      cubit.lastStats != null) ...[
+                    // الإحصائيات (بتقرأ من الـ state أو من المخزن في الكيوبت)
+                    VerificationStatsBar(
+                      stats: state is DoctorVerificationSuccess
+                          ? state.stats
+                          : cubit.lastStats!,
+                    ),
+                    const SizedBox(height: 32),
+
+                    // التابات (دايماً ظاهرة عشان اللون الأخضر ميهربش)
+                    VerificationTabsView(
+                      verifications: state is DoctorVerificationSuccess
+                          ? state.verifications
+                          : [],
+                      currentStatus: state is DoctorVerificationSuccess
+                          ? state.currentStatus
+                          : cubit.currentStatus,
+                    ),
+                    const SizedBox(height: 32),
+                    const PaginationBar(),
+                  ]
+                  // لو أول مرة في التاريخ ومفيش حتى stats قديمة
+                  else if (state is DoctorVerificationLoading)
                     const Center(
                       child: Padding(
                         padding: EdgeInsets.all(100.0),
                         child: CircularProgressIndicator(),
                       ),
                     )
-                  else if (state is DoctorVerificationSuccess) ...[
-                    // الـ Spread Operator (...) بيفرط الودجيتس جوه الـ Column الأساسي
-                    VerificationStatsBar(stats: state.stats),
-                    const SizedBox(height: 32),
-                    VerificationTabsView(verifications: state.verifications),
-                    const SizedBox(height: 32),
-                    const PaginationBar(),
-                  ] else if (state is DoctorVerificationFailure)
+                  else if (state is DoctorVerificationFailure)
                     Center(child: Text(state.errMessage)),
                 ],
               ),

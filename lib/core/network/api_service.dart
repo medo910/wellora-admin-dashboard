@@ -70,4 +70,14 @@ class ApiService {
     final response = await _dio.post(endpoint, data: body);
     return response.data;
   }
+
+  Future<dynamic> patch({required String endpoint, dynamic data}) async {
+    final response = await _dio.patch(endpoint, data: data);
+    return response.data;
+  }
+
+  Future<dynamic> put({required String endpoint, dynamic data}) async {
+    final response = await _dio.put(endpoint, data: data);
+    return response.data;
+  }
 }

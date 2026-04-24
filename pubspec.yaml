@@ -47,6 +47,10 @@ dependencies:
   intl: ^0.20.2
   easy_image_viewer: ^1.5.1
   cached_network_image: ^3.4.1
+  meta: ^1.17.0
+  bloc: ^9.2.0
+  equatable: ^2.0.8
+  signalr_netcore: ^1.4.4
 
 dev_dependencies:
   flutter_test:

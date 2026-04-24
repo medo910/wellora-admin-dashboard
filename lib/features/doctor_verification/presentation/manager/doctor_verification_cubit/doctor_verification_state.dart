@@ -12,12 +12,16 @@ class DoctorVerificationSuccess extends DoctorVerificationState {
   final VerificationStatsEntity stats;
   final int page; // الصفحة الحالية
   final bool hasNextPage; // هل فيه صفحة تانية؟
+  final int totalItems; // إجمالي عدد العناصر (لأغراض الإحصائيات)
+  final String? currentStatus;
 
   DoctorVerificationSuccess({
     required this.verifications,
     required this.stats,
     required this.page,
     required this.hasNextPage,
+    required this.totalItems,
+    this.currentStatus,
   });
 }
 

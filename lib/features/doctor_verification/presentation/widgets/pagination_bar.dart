@@ -22,7 +22,7 @@ class PaginationBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Showing page ${state.page} of ${((state.stats.total) / 10).ceil()}",
+                "Showing page ${state.page} of ${((state.totalItems) / 10).ceil()}",
                 style: const TextStyle(color: Color(0xFF64748B)),
               ),
               Row(

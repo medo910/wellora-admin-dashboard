@@ -1,6 +1,5 @@
 // lib/shared_widgets/admin_header.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart'; // أنت ضايفها في الـ dependencies
 
 class AdminHeader extends StatelessWidget {
   const AdminHeader({super.key});
@@ -101,7 +100,7 @@ class AdminHeader extends StatelessWidget {
               const SizedBox(width: 12),
               CircleAvatar(
                 radius: 18,
-                backgroundColor: const Color(0xFF008080).withOpacity(0.1),
+                backgroundColor: const Color(0xFF008080).withValues(alpha: 0.1),
                 child: const Text(
                   "AD",
                   style: TextStyle(
