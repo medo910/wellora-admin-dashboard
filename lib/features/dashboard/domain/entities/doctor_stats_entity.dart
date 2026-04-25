@@ -6,6 +6,7 @@ class DoctorStatsEntity {
   final int rejectedDoctors;
   final double averageRating;
   final int totalReviews;
+  final double percentageChange;
 
   DoctorStatsEntity({
     required this.totalDoctors,
@@ -14,5 +15,6 @@ class DoctorStatsEntity {
     required this.rejectedDoctors,
     required this.averageRating,
     required this.totalReviews,
+    required this.percentageChange,
   });
 }

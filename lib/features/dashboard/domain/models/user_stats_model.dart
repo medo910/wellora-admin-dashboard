@@ -10,6 +10,7 @@ class UserStatsModel extends UserStatsEntity {
     required super.suspendedUsers,
     required super.activeUsers,
     required super.newUsersThisMonth,
+    required super.percentageChange,
   });
 
   factory UserStatsModel.fromJson(Map<String, dynamic> json) {
@@ -21,6 +22,7 @@ class UserStatsModel extends UserStatsEntity {
       suspendedUsers: json['suspendedUsers'] ?? 0,
       activeUsers: json['activeUsers'] ?? 0,
       newUsersThisMonth: json['newUsersThisMonth'] ?? 0,
+      percentageChange: (json['newUsersPercentageChange'] ?? 0).toDouble(),
     );
   }
 }

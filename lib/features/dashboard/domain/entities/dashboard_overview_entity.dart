@@ -7,22 +7,6 @@ import 'package:admin_dashboard_graduation_project/features/dashboard/domain/ent
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/user_stats_entity.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/verification_stats_entity.dart';
 
-// class DashboardOverviewEntity {
-//   final UserStatsEntity userStats;
-//   final DoctorStatsEntity doctorStats;
-//   final TicketStatsEntity ticketStats;
-//   final VerificationStatsEntity verificationStats;
-//   final RecentActivityEntity recentActivity;
-
-//   DashboardOverviewEntity({
-//     required this.userStats,
-//     required this.doctorStats,
-//     required this.ticketStats,
-//     required this.verificationStats,
-//     required this.recentActivity,
-//   });
-// }
-
 // lib/features/dashboard/domain/entities/dashboard_overview_entity.dart
 class DashboardOverviewEntity {
   final UserStatsEntity userStats;

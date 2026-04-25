@@ -1,5 +1,5 @@
 // lib/shared_widgets/admin_scaffold.dart
-import 'package:admin_dashboard_graduation_project/core/shared_widgets/admin_header.dart';
+import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/widgets/admin_header.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/widgets/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 

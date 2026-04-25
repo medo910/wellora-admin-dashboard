@@ -8,6 +8,7 @@ class DoctorStatsModel extends DoctorStatsEntity {
     required super.rejectedDoctors,
     required super.averageRating,
     required super.totalReviews,
+    required super.percentageChange,
   });
 
   factory DoctorStatsModel.fromJson(Map<String, dynamic> json) {
@@ -18,6 +19,8 @@ class DoctorStatsModel extends DoctorStatsEntity {
       rejectedDoctors: json['rejectedDoctors'] ?? 0,
       averageRating: (json['averageRating'] ?? 0).toDouble(),
       totalReviews: json['totalReviews'] ?? 0,
+      percentageChange: (json['verifiedDoctorsPercentageChange'] ?? 0)
+          .toDouble(),
     );
   }
 }

@@ -103,44 +103,19 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
     );
   }
 
-  // ميثود مساعدة لرسم الشبكة
   Widget _buildStatsGrid(DashboardOverviewEntity overview) {
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 4, // 4 كروت في الويب
+      crossAxisCount: 4,
       crossAxisSpacing: 20,
       mainAxisSpacing: 20,
       childAspectRatio: 1.5,
       children: [
-        // StatCard(
-        //   title: "Total Users",
-        //   value: overview.userStats.totalUsers.toString(),
-        //   icon: Icons.people,
-        //   color: Colors.blue,
-        // ),
-        // StatCard(
-        //   title: "Verified Doctors",
-        //   value: overview.doctorStats.verifiedDoctors.toString(),
-        //   icon: Icons.verified_user,
-        //   color: Colors.green,
-        // ),
-        // StatCard(
-        //   title: "Pending Verifications",
-        //   value: overview.verificationStats.pendingVerifications.toString(),
-        //   icon: Icons.hourglass_empty,
-        //   color: Colors.orange,
-        // ),
-        // StatCard(
-        //   title: "Open Tickets",
-        //   value: overview.ticketStats.openTickets.toString(),
-        //   icon: Icons.confirmation_number,
-        //   color: Colors.red,
-        // ),
         StatCard(
           title: "Total Users",
           value: overview.userStats.totalUsers.toString(),
-          change: 12.5, // قيمة تجريبية لنسبة النمو
+          change: overview.userStats.percentageChange, // 🚀 داتا حقيقية
           icon: Icons.people_alt_rounded,
           iconColor: Colors.blue,
           chartColor: Colors.blue,
@@ -148,14 +123,15 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
         StatCard(
           title: "Verified Doctors",
           value: overview.doctorStats.verifiedDoctors.toString(),
-          change: 8.2,
+          change: overview.doctorStats.percentageChange, // 🚀 داتا حقيقية
           icon: Icons.verified_user_rounded,
           iconColor: Colors.teal,
           chartColor: Colors.teal,
         ),
         StatCard(
           title: "Pending Verifications",
-          value: overview.verificationStats.pendingVerifications.toString(),
+          value: overview.doctorStats.pendingVerification.toString(),
+          // ملهاش نسبة مئوية في الـ JSON فبنسيب الـ change بـ null
           icon: Icons.pending_actions_rounded,
           iconColor: Colors.orange,
           chartColor: Colors.orange,
@@ -163,7 +139,7 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
         StatCard(
           title: "Closed Tickets",
           value: overview.ticketStats.closedTickets.toString(),
-          change: -2.4, // تراجع في التذاكر المغلقة مثلاً
+          // لو حابب تحسب النسبة يدوي أو تسيبها null حالياً
           icon: Icons.task_alt_rounded,
           iconColor: Colors.purple,
           chartColor: Colors.purple,

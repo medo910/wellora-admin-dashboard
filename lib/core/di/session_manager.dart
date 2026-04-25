@@ -4,11 +4,12 @@ import 'dart:io';
 import 'package:admin_dashboard_graduation_project/core/di/secure_storage_helper.dart';
 import 'package:admin_dashboard_graduation_project/features/auth/domain/models/auth_token_model.dart';
 import 'package:admin_dashboard_graduation_project/features/auth/domain/repos/auth_repo.dart';
+import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
 enum SessionStatus { valid, invalid, error }
 
-class SessionManager {
+class SessionManager extends ChangeNotifier {
   final AuthRepository _authRepository;
 
   // ✅ متغير لتخزين الـ ID في الذاكرة (Memory Cache)
@@ -116,6 +117,8 @@ class SessionManager {
 
             _cachedUserId = await SecureStorageHelper.getUserId();
 
+            notifyListeners();
+
             return SessionStatus.valid;
           }
 
@@ -174,6 +177,8 @@ class SessionManager {
     _cachedName = name;
 
     _cachedRole = role;
+
+    notifyListeners();
 
     log(
       "💡 SessionManager: Memory Cache updated - ID: $id, Name: $name, Role: $role",

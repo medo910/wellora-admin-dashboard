@@ -1,4 +1,5 @@
 // lib/core/di/injection_container.dart
+import 'package:admin_dashboard_graduation_project/core/di/session_manager.dart';
 import 'package:admin_dashboard_graduation_project/core/network/api_service.dart';
 import 'package:admin_dashboard_graduation_project/core/services/signalr_service.dart';
 import 'package:admin_dashboard_graduation_project/features/auth/data/data_sources/auth_remote_data_source.dart';
@@ -9,9 +10,12 @@ import 'package:admin_dashboard_graduation_project/features/auth/domain/use_case
 import 'package:admin_dashboard_graduation_project/features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/data/data_sources/dashboard_remote_data_source.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/data/repositories/dashboard_repository_impl.dart';
+import 'package:admin_dashboard_graduation_project/features/dashboard/data/repositories/notification_repository_impl.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/repositories/dashboard_repository.dart';
+import 'package:admin_dashboard_graduation_project/features/dashboard/domain/repositories/notification_repository.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/use_cases/get_dashboard_overview_use_case.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/cubit/dashboard_cubit/dashboard_cubit.dart';
+import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/cubit/notification_cubit/notification_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/cubit/sidebar_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/data/data_sources/doctor_verification_remote_data_source.dart';
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/data/repositories/doctor_verification_repository_impl.dart';
@@ -21,6 +25,14 @@ import 'package:admin_dashboard_graduation_project/features/doctor_verification/
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/domain/use_cases/get_verifications_use_case.dart';
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/domain/use_cases/reject_verification_use_case.dart';
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/presentation/manager/doctor_verification_cubit/doctor_verification_cubit.dart';
+import 'package:admin_dashboard_graduation_project/features/review_moderation/data/datasources/review_remote_data_source.dart';
+import 'package:admin_dashboard_graduation_project/features/review_moderation/data/repositories/review_repository_impl.dart';
+import 'package:admin_dashboard_graduation_project/features/review_moderation/domain/repositories/review_repository.dart';
+import 'package:admin_dashboard_graduation_project/features/review_moderation/domain/usecases/delete_review_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/review_moderation/domain/usecases/get_deleted_reviews_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/review_moderation/domain/usecases/get_reviews_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/review_moderation/domain/usecases/restore_review_use_case.dart';
+import 'package:admin_dashboard_graduation_project/features/review_moderation/presentation/manager/review_moderation_cubit/review_moderation_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/support_tickets/data/data_sources/support_remote_data_source.dart';
 import 'package:admin_dashboard_graduation_project/features/support_tickets/data/repositories/support_repository_impl.dart';
 import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/repositories/support_repository.dart';
@@ -62,6 +74,11 @@ Future<void> init() async {
   sl.registerLazySingleton(() => ResendOtpUseCase(sl()));
   sl.registerFactory(() => AuthCubit(sl(), sl()));
 
+  // core/di/injection_container.dart
+
+  // لازم نسجل الـ SessionManager كـ LazySingleton ونبعتله الـ Repository اللي هو محتاجه
+  sl.registerLazySingleton(() => SessionManager(sl<AuthRepository>()));
+
   // 3. Dashboard Feature
   // تأكد إن السطور دي موجودة مرة واحدة فقط!
   sl.registerLazySingleton(
@@ -79,6 +96,11 @@ Future<void> init() async {
   // Data Sources
   sl.registerLazySingleton<UsersRemoteDataSource>(
     () => UsersRemoteDataSourceImpl(sl()),
+  );
+
+  sl.registerFactory(() => NotificationCubit(sl()));
+  sl.registerLazySingleton<NotificationRepository>(
+    () => NotificationRepositoryImpl(sl()),
   );
 
   // Repository
@@ -178,6 +200,25 @@ Future<void> init() async {
       updateStatusUseCase: sl<UpdateTicketStatusUseCase>(),
       updatePriorityUseCase: sl<UpdateTicketPriorityUseCase>(),
       signalRService: sl<SignalRService>(),
+    ),
+  );
+
+  sl.registerLazySingleton<ReviewRemoteDataSource>(
+    () => ReviewRemoteDataSourceImpl(sl()),
+  );
+  sl.registerLazySingleton<ReviewRepository>(() => ReviewRepositoryImpl(sl()));
+
+  sl.registerLazySingleton(() => GetReviewsUseCase(sl()));
+  sl.registerLazySingleton(() => GetDeletedReviewsUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteReviewUseCase(sl()));
+  sl.registerLazySingleton(() => RestoreReviewUseCase(sl()));
+
+  sl.registerFactory(
+    () => ReviewModerationCubit(
+      getReviewsUseCase: sl(),
+      getDeletedUseCase: sl(),
+      deleteReviewUseCase: sl(),
+      restoreUseCase: sl(),
     ),
   );
 }

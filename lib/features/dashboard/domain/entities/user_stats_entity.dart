@@ -7,6 +7,7 @@ class UserStatsEntity {
   final int suspendedUsers;
   final int activeUsers;
   final int newUsersThisMonth;
+  final double percentageChange;
 
   UserStatsEntity({
     required this.totalUsers,
@@ -16,5 +17,6 @@ class UserStatsEntity {
     required this.suspendedUsers,
     required this.activeUsers,
     required this.newUsersThisMonth,
+    required this.percentageChange,
   });
 }

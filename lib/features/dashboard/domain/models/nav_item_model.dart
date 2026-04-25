@@ -34,11 +34,11 @@ final List<NavItemModel> adminNavItems = [
   NavItemModel(
     title: "Review Moderation",
     icon: Icons.message_outlined,
-    route: '/admin/reviews',
+    route: AppRouter.kReviewModeration,
   ),
-  NavItemModel(
-    title: "Audit Logs",
-    icon: Icons.history_edu_outlined,
-    route: '/admin/audit',
-  ),
+  // NavItemModel(
+  //   title: "Audit Logs",
+  //   icon: Icons.history_edu_outlined,
+  //   route: '/admin/audit',
+  // ),
 ];

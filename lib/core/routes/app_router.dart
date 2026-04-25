@@ -1,15 +1,19 @@
 // lib/core/routes/app_router.dart
 import 'package:admin_dashboard_graduation_project/core/di/injection_container.dart';
 import 'package:admin_dashboard_graduation_project/core/di/secure_storage_helper.dart';
+import 'package:admin_dashboard_graduation_project/core/di/session_manager.dart';
 import 'package:admin_dashboard_graduation_project/core/shared_widgets/admin_scaffold.dart';
 import 'package:admin_dashboard_graduation_project/features/auth/presentation/manager/auth_cubit/auth_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/auth/presentation/pages/login_page.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/cubit/dashboard_cubit/dashboard_cubit.dart';
+import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/cubit/notification_cubit/notification_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/cubit/sidebar_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/pages/dashboard_overview_page.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/pages/otp_page.dart';
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/presentation/manager/doctor_verification_cubit/doctor_verification_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/presentation/pages/doctor_verification_page.dart';
+import 'package:admin_dashboard_graduation_project/features/review_moderation/presentation/manager/review_moderation_cubit/review_moderation_cubit.dart';
+import 'package:admin_dashboard_graduation_project/features/review_moderation/presentation/pages/review_moderation_page.dart';
 import 'package:admin_dashboard_graduation_project/features/support_tickets/presentation/manager/support_cubit/support_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/support_tickets/presentation/pages/support_tickets_page.dart';
 import 'package:admin_dashboard_graduation_project/features/users/presentation/manager/cubit/users_cubit.dart';
@@ -24,21 +28,47 @@ class AppRouter {
   static const kUsers = '/admin/users'; // 1. إضافة مسار المستخدمين
   static const kDoctorVerification = '/admin/doctor-verification';
   static const kSupportTickets = '/admin/support-tickets';
+  static const kReviewModeration = '/admin/review-moderation';
 
   static final router = GoRouter(
     initialLocation: kDashboard,
     redirect: (context, state) async {
-      final token = await SecureStorageHelper.getAccessToken(); // [cite: 98]
-      final bool loggingIn = state.matchedLocation == kLogin;
-      final bool isOtpPage = state.matchedLocation == kOtp; // 1. ضيف السطر ده
+      // final token = await SecureStorageHelper.getAccessToken(); // [cite: 98]
+      // final bool loggingIn = state.matchedLocation == kLogin;
+      // final bool isOtpPage = state.matchedLocation == kOtp; // 1. ضيف السطر ده
 
-      if (token == null) {
+      // if (token == null) {
+      //   if (loggingIn || isOtpPage) return null;
+      //   return kLogin;
+      // }
+
+      // if (loggingIn || isOtpPage) return kDashboard;
+      // return null;
+      final session = sl<SessionManager>();
+
+      // 1. نادى الـ validateSession عشان يحمل البيانات
+      final status = await session.validateSession();
+
+      // 2. حدد إحنا فين دلوقتي
+      final bool loggingIn = state.matchedLocation == kLogin;
+      final bool isOtpPage =
+          state.matchedLocation == kOtp; // 🚀 لازم نضيف السطر ده
+
+      // 3. لو الجلسة غير صالحة (يعني مفيش Token)
+      if (status == SessionStatus.invalid) {
+        // 💡 لو هو بيحاول يروح للوجين أو الـ OTP سيبه يروح (رجع null)
         if (loggingIn || isOtpPage) return null;
+
+        // غير كدا، لو بيحاول يدخل أي صفحة تانية وهو مش مسجل، اطرده للوجين
         return kLogin;
       }
 
-      if (loggingIn || isOtpPage) return kDashboard;
-      return null;
+      // 4. لو الجلسة صالحة (مسجل دخول كامل) وهو لسه واقف في اللوجين أو الـ OTP
+      if (status == SessionStatus.valid) {
+        if (loggingIn || isOtpPage) return kDashboard;
+      }
+
+      return null; // سيبه يكمل في طريقه العادي
     },
     routes: [
       GoRoute(path: kLogin, builder: (context, state) => const LoginPage()),
@@ -61,8 +91,14 @@ class AppRouter {
       ShellRoute(
         builder: (context, state, child) {
           // بنغلف الـ AdminScaffold بالكيوبت عشان الـ Sidebar يقدر يشوفه
-          return BlocProvider(
-            create: (context) => sl<SidebarCubit>(),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => sl<SidebarCubit>()),
+              BlocProvider(
+                create: (context) =>
+                    sl<NotificationCubit>()..fetchNotifications(),
+              ),
+            ],
             child: AdminScaffold(child: child),
           );
         },
@@ -109,6 +145,16 @@ class AppRouter {
               return BlocProvider(
                 create: (context) => sl<SupportCubit>()..fetchSupportData(),
                 child: const SupportTicketsPage(),
+              );
+            },
+          ),
+          GoRoute(
+            path: kReviewModeration,
+            builder: (context, state) {
+              return BlocProvider(
+                create: (context) =>
+                    sl<ReviewModerationCubit>()..fetchReviews(),
+                child: const ReviewModerationPage(),
               );
             },
           ),
