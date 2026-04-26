@@ -137,6 +137,14 @@ class SignalRService {
     }
   }
 
+  void off(String eventName) {
+    if (_hubConnection != null) {
+      _hubConnection!.off(eventName);
+      log("🚫 SignalR: Listener for '$eventName' removed.");
+    }
+    _pendingListeners.remove(eventName);
+  }
+
   // ميثود للتأكد إن الاتصال جاهز
   bool get isConnected => _hubConnection?.state == HubConnectionState.Connected;
 }
