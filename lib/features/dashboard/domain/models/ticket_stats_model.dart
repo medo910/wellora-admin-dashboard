@@ -5,8 +5,11 @@ class TicketStatsModel extends TicketStatsEntity {
     required super.totalTickets,
     required super.openTickets,
     required super.closedTickets,
-    required super.urgentTickets,
+    // required super.urgentTickets,
     required super.ticketsByCategory,
+    required super.percentageChange, // 🚀 لزوم التشارت الصغير
+    required super.lastSevenDaysTrend, //
+    required super.resolvedTickets,
   });
 
   factory TicketStatsModel.fromJson(Map<String, dynamic> json) {
@@ -14,8 +17,11 @@ class TicketStatsModel extends TicketStatsEntity {
       totalTickets: json['totalTickets'] ?? 0,
       openTickets: json['openTickets'] ?? 0,
       closedTickets: json['closedTickets'] ?? 0,
-      urgentTickets: json['urgentTickets'] ?? 0,
+      // urgentTickets: json['urgentTickets'] ?? 0,
       ticketsByCategory: Map<String, int>.from(json['ticketsByCategory'] ?? {}),
+      percentageChange: (json['closedTicketsPercentageChange'] ?? 0).toDouble(),
+      lastSevenDaysTrend: List<int>.from(json['lastSevenDaysTrend'] ?? []),
+      resolvedTickets: json['resolvedTickets'] ?? 0,
     );
   }
 }

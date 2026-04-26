@@ -4,62 +4,75 @@ import 'dart:developer';
 import 'package:signalr_netcore/signalr_client.dart';
 
 // class SignalRService {
-//   late HubConnection _hubConnection;
-//   final String _baseUrl =
-//       "https://wellora-healthcaremanagment.runasp.net/hubs/app"; //
+//   HubConnection? _hubConnection; // شيلنا late وخليناها nullable
+//   final String _url = "https://wellora-healthcaremanagment.runasp.net/hubs/app";
 
 //   Future<void> init(String token) async {
-//     _hubConnection = HubConnectionBuilder()
-//         .withUrl(
-//           _baseUrl,
-//           options: HttpConnectionOptions(
-//             accessTokenFactory: () async => token, //
-//           ),
-//         )
-//         .withAutomaticReconnect()
-//         .build();
+//     try {
+//       // 1. لو الاتصال موجود وشغال أو بيحاول يربط، مابنعملش حاجة
+//       if (_hubConnection?.state == HubConnectionState.Connected ||
+//           _hubConnection?.state == HubConnectionState.Connecting ||
+//           _hubConnection?.state == HubConnectionState.Reconnecting) {
+//         log("ℹ️ SignalR is already active or connecting.");
+//         return;
+//       }
 
-//     await _hubConnection.start();
+//       // 2. بناء الاتصال مع الـ Named Argument "options"
+//       _hubConnection = HubConnectionBuilder()
+//           .withUrl(
+//             _url,
+//             options: HttpConnectionOptions(
+//               accessTokenFactory: () async => token,
+//             ),
+//           )
+//           .withAutomaticReconnect()
+//           .build();
+
+//       // 3. الاستماع لحدث القفل عشان ما يحصلش الـ LegacyJavaScriptObject error
+//       _hubConnection!.onclose(({error}) {
+//         log("⚠️ SignalR Connection Closed: $error");
+//       });
+
+//       // 4. تشغيل الاتصال
+//       await _hubConnection!.start();
+//       log("✅ SignalR Started Successfully");
+//     } catch (e) {
+//       // هنا بنمسك الخطأ عشان الـ App ما يقفلش
+//       log("❌ SignalR Init Error: $e");
+//     }
 //   }
 
-//   // ميثود للاستماع لأي حدث (Event)
+//   // ميثود للتأكد إن الاتصال جاهز
+//   bool get isConnected => _hubConnection?.state == HubConnectionState.Connected;
+
 //   void on(String eventName, void Function(List<Object?>?) callback) {
-//     _hubConnection.on(eventName, callback);
+//     _hubConnection?.on(eventName, callback);
 //   }
 
-//   // ميثود لمناداة ميثود في السيرفر (مثل JoinTicket)
 //   Future<void> invoke(String methodName, {List<Object>? args}) async {
-//     await _hubConnection.invoke(methodName, args: args);
+//     // 🚀 فحص الأمان: لو مش متصل، استنى ثانية أو اخرج بهدوء
+//     if (isConnected) {
+//       await _hubConnection?.invoke(methodName, args: args);
+//     } else {
+//       log("⚠️ SignalR not connected. Action $methodName ignored.");
+//     }
 //   }
-
-//   Future<void> stop() async => await _hubConnection.stop();
 // }
 
-// core/services/signalr_service.dart
+// lib/core/services/signalr_service.dart
+import 'dart:developer';
+import 'package:signalr_netcore/signalr_client.dart';
+
 class SignalRService {
-  HubConnection? _hubConnection; // شيلنا late وخليناها nullable
+  HubConnection? _hubConnection;
   final String _url = "https://wellora-healthcaremanagment.runasp.net/hubs/app";
 
-  // Future<void> init(String token) async {
-  //   // لو الاتصال شغال أصلاً متبعيدش تشغيله
-  //   if (_hubConnection?.state == HubConnectionState.Connected) return;
-
-  //   _hubConnection = HubConnectionBuilder()
-  //       .withUrl(
-  //         _url,
-  //         options: HttpConnectionOptions(accessTokenFactory: () async => token),
-  //       )
-  //       .withAutomaticReconnect()
-  //       .build();
-
-  //   await _hubConnection?.start();
-  // }
-
-  // core/services/signalr_service.dart
+  // 🚀 قائمة لتخزين الـ Listeners اللي بيتم تسجيلهم قبل ما الاتصال يجهز
+  final Map<String, List<void Function(List<Object?>?)>> _pendingListeners = {};
 
   Future<void> init(String token) async {
     try {
-      // 1. لو الاتصال موجود وشغال أو بيحاول يربط، مابنعملش حاجة
+      // 1. لو الاتصال موجود وشغال، مابنعملش حاجة
       if (_hubConnection?.state == HubConnectionState.Connected ||
           _hubConnection?.state == HubConnectionState.Connecting ||
           _hubConnection?.state == HubConnectionState.Reconnecting) {
@@ -67,7 +80,7 @@ class SignalRService {
         return;
       }
 
-      // 2. بناء الاتصال مع الـ Named Argument "options"
+      // 2. بناء الاتصال
       _hubConnection = HubConnectionBuilder()
           .withUrl(
             _url,
@@ -78,33 +91,52 @@ class SignalRService {
           .withAutomaticReconnect()
           .build();
 
-      // 3. الاستماع لحدث القفل عشان ما يحصلش الـ LegacyJavaScriptObject error
+      // 3. أول ما الـ Connection يجهز، سجل كل الـ Listeners اللي كانت مستنية في الـ Queue
+      _pendingListeners.forEach((eventName, callbacks) {
+        for (var callback in callbacks) {
+          _hubConnection!.on(eventName, callback);
+          log("✅ SignalR: Pending listener for '$eventName' registered.");
+        }
+      });
+      _pendingListeners.clear(); // فضي القائمة بعد التسجيل
+
       _hubConnection!.onclose(({error}) {
         log("⚠️ SignalR Connection Closed: $error");
       });
 
       // 4. تشغيل الاتصال
       await _hubConnection!.start();
-      log("✅ SignalR Started Successfully");
+      print("✅ SignalR Started Successfully");
     } catch (e) {
-      // هنا بنمسك الخطأ عشان الـ App ما يقفلش
       log("❌ SignalR Init Error: $e");
+    }
+  }
+
+  // ✅ ميثود الـ On (مع ميزة الـ Queueing عشان التنبيهات)
+  void on(String eventName, void Function(List<Object?>?) callback) {
+    if (_hubConnection != null) {
+      _hubConnection!.on(eventName, callback);
+    } else {
+      // لو الـ Hub لسه مجهزاش، شيل الـ listener عندك عشان تسجله أول ما يفتح
+      _pendingListeners.putIfAbsent(eventName, () => []).add(callback);
+      log("ℹ️ SignalR: Listener for '$eventName' queued (Hub not ready yet)");
+    }
+  }
+
+  // ✅ ميثود الـ Invoke (اللي كانت ناقصة وسببت الأيرور في الـ Chat)
+  Future<void> invoke(String methodName, {List<Object>? args}) async {
+    if (isConnected) {
+      try {
+        await _hubConnection?.invoke(methodName, args: args);
+        log("🚀 SignalR Invoke: $methodName with args $args");
+      } catch (e) {
+        log("❌ SignalR Invoke Error ($methodName): $e");
+      }
+    } else {
+      log("⚠️ SignalR not connected. Action $methodName ignored.");
     }
   }
 
   // ميثود للتأكد إن الاتصال جاهز
   bool get isConnected => _hubConnection?.state == HubConnectionState.Connected;
-
-  void on(String eventName, void Function(List<Object?>?) callback) {
-    _hubConnection?.on(eventName, callback);
-  }
-
-  Future<void> invoke(String methodName, {List<Object>? args}) async {
-    // 🚀 فحص الأمان: لو مش متصل، استنى ثانية أو اخرج بهدوء
-    if (isConnected) {
-      await _hubConnection?.invoke(methodName, args: args);
-    } else {
-      log("⚠️ SignalR not connected. Action $methodName ignored.");
-    }
-  }
 }

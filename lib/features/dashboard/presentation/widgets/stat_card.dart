@@ -10,11 +10,13 @@ class StatCard extends StatelessWidget {
   final IconData icon;
   final Color chartColor;
   final Color iconColor;
+  final List<int> trend;
   const StatCard({
     required this.title,
     required this.value,
     this.change,
     required this.icon,
+    required this.trend,
     this.chartColor = AppColors.primary,
     this.iconColor = AppColors.primary,
     super.key,
@@ -25,6 +27,9 @@ class StatCard extends StatelessWidget {
     // bool isPositive = change > 0;
     double displayChange = change ?? 0;
     bool isPositive = displayChange >= 0;
+    List<FlSpot> spots = trend.asMap().entries.map((e) {
+      return FlSpot(e.key.toDouble(), e.value.toDouble());
+    }).toList();
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -104,21 +109,35 @@ class StatCard extends StatelessWidget {
                 gridData: FlGridData(show: false),
                 titlesData: FlTitlesData(show: false),
                 borderData: FlBorderData(show: false),
+                // lineBarsData: [
+                //   LineChartBarData(
+                //     spots: [
+                //       const FlSpot(0, 3),
+                //       const FlSpot(2, 4),
+                //       const FlSpot(4, 3.5),
+                //       const FlSpot(6, 5),
+                //       const FlSpot(8, 4.5),
+                //       const FlSpot(10, 6),
+                //     ],
+                //     isCurved: true,
+                //     color: chartColor,
+                //     barWidth: 2,
+                //     isStrokeCapRound: true,
+                //     dotData: FlDotData(show: false),
+                //     belowBarData: BarAreaData(
+                //       show: true,
+                //       color: chartColor.withValues(alpha: 0.1),
+                //     ),
+                //   ),
+                // ],
                 lineBarsData: [
                   LineChartBarData(
-                    spots: [
-                      const FlSpot(0, 3),
-                      const FlSpot(2, 4),
-                      const FlSpot(4, 3.5),
-                      const FlSpot(6, 5),
-                      const FlSpot(8, 4.5),
-                      const FlSpot(10, 6),
-                    ],
+                    spots: spots, // 🚀 الداتا الحقيقية بقت هنا
                     isCurved: true,
                     color: chartColor,
                     barWidth: 2,
                     isStrokeCapRound: true,
-                    dotData: FlDotData(show: false),
+                    dotData: const FlDotData(show: false),
                     belowBarData: BarAreaData(
                       show: true,
                       color: chartColor.withValues(alpha: 0.1),

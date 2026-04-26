@@ -48,7 +48,6 @@ class NotificationSection extends StatelessWidget {
             const PopupMenuDivider(),
             if (state is NotificationSuccess && state.notifications.isNotEmpty)
               ...state.notifications
-                  .take(5)
                   .map(
                     (noti) => PopupMenuItem<String>(
                       value: noti.id,
@@ -65,6 +64,32 @@ class NotificationSection extends StatelessWidget {
                   child: Text(
                     "No new notifications",
                     style: TextStyle(color: Colors.grey, fontSize: 13),
+                  ),
+                ),
+              ),
+
+            const PopupMenuDivider(),
+            if (context.read<NotificationCubit>().hasNextPage)
+              PopupMenuItem<String>(
+                onTap: () => context.read<NotificationCubit>().fetchMore(),
+                child: const Center(
+                  child: Text(
+                    "Show More",
+                    style: TextStyle(
+                      color: Color(0xFF008080),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
+                  ),
+                ),
+              )
+            else
+              const PopupMenuItem(
+                enabled: false,
+                child: Center(
+                  child: Text(
+                    "No more notifications",
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                 ),
               ),

@@ -6,11 +6,12 @@ class UserStatsModel extends UserStatsEntity {
     required super.totalUsers,
     required super.totalDoctors,
     required super.totalPatients,
-    required super.blockedUsers,
-    required super.suspendedUsers,
+    // required super.blockedUsers,
+    // required super.suspendedUsers,
     required super.activeUsers,
     required super.newUsersThisMonth,
     required super.percentageChange,
+    required super.lastSevenDaysTrend, // 🚀 الجديد
   });
 
   factory UserStatsModel.fromJson(Map<String, dynamic> json) {
@@ -18,11 +19,12 @@ class UserStatsModel extends UserStatsEntity {
       totalUsers: json['totalUsers'] ?? 0,
       totalDoctors: json['totalDoctors'] ?? 0,
       totalPatients: json['totalPatients'] ?? 0,
-      blockedUsers: json['blockedUsers'] ?? 0,
-      suspendedUsers: json['suspendedUsers'] ?? 0,
+      // blockedUsers: json['blockedUsers'] ?? 0,
+      // suspendedUsers: json['suspendedUsers'] ?? 0,
       activeUsers: json['activeUsers'] ?? 0,
       newUsersThisMonth: json['newUsersThisMonth'] ?? 0,
       percentageChange: (json['newUsersPercentageChange'] ?? 0).toDouble(),
+      lastSevenDaysTrend: List<int>.from(json['lastSevenDaysTrend'] ?? []),
     );
   }
 }

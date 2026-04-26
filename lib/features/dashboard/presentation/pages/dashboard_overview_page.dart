@@ -29,22 +29,22 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
     super.initState(); // 💡 دايماً ابدأ بـ super.initState()
 
     // نداء ميثود الـ Init في الخلفية
-    _setupSignalR();
+    // _setupSignalR();
   }
 
-  void _setupSignalR() async {
-    try {
-      final token = await SecureStorageHelper.getAccessToken();
-      if (token != null) {
-        await sl<SignalRService>().init(token);
-        print("🚀 SignalR Initialized from Dashboard");
-      } else {
-        print("⚠️ No token found for SignalR");
-      }
-    } catch (e) {
-      print("❌ SignalR Init Error: $e");
-    }
-  }
+  // void _setupSignalR() async {
+  //   try {
+  //     final token = await SecureStorageHelper.getAccessToken();
+  //     if (token != null) {
+  //       await sl<SignalRService>().init(token);
+  //       print("🚀 SignalR Initialized from Dashboard");
+  //     } else {
+  //       print("⚠️ No token found for SignalR");
+  //     }
+  //   } catch (e) {
+  //     print("❌ SignalR Init Error: $e");
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +88,7 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
                     Expanded(
                       flex: 1,
                       child: RegistrationTrendsChart(
-                        userStats: overview.userStats,
+                        trends: overview.userRegistrationTrend,
                       ),
                     ),
                   ],
@@ -115,6 +115,7 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
         StatCard(
           title: "Total Users",
           value: overview.userStats.totalUsers.toString(),
+          trend: overview.userStats.lastSevenDaysTrend,
           change: overview.userStats.percentageChange, // 🚀 داتا حقيقية
           icon: Icons.people_alt_rounded,
           iconColor: Colors.blue,
@@ -125,6 +126,7 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
           value: overview.doctorStats.verifiedDoctors.toString(),
           change: overview.doctorStats.percentageChange, // 🚀 داتا حقيقية
           icon: Icons.verified_user_rounded,
+          trend: overview.doctorStats.lastSevenDaysTrend,
           iconColor: Colors.teal,
           chartColor: Colors.teal,
         ),
@@ -133,6 +135,8 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
           value: overview.doctorStats.pendingVerification.toString(),
           // ملهاش نسبة مئوية في الـ JSON فبنسيب الـ change بـ null
           icon: Icons.pending_actions_rounded,
+          change: overview.verificationStats.percentageChange, // 🚀 داتا حقيقية
+          trend: overview.verificationStats.lastSevenDaysTrend,
           iconColor: Colors.orange,
           chartColor: Colors.orange,
         ),
@@ -141,6 +145,8 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
           value: overview.ticketStats.closedTickets.toString(),
           // لو حابب تحسب النسبة يدوي أو تسيبها null حالياً
           icon: Icons.task_alt_rounded,
+          change: overview.ticketStats.percentageChange, // 🚀 داتا حقيقية
+          trend: overview.ticketStats.lastSevenDaysTrend,
           iconColor: Colors.purple,
           chartColor: Colors.purple,
         ),

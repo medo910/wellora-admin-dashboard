@@ -98,7 +98,7 @@ Future<void> init() async {
     () => UsersRemoteDataSourceImpl(sl()),
   );
 
-  sl.registerFactory(() => NotificationCubit(sl()));
+  sl.registerFactory(() => NotificationCubit(sl(), sl()));
   sl.registerLazySingleton<NotificationRepository>(
     () => NotificationRepositoryImpl(sl()),
   );

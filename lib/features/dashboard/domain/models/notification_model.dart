@@ -14,11 +14,15 @@ class NotificationModel extends NotificationEntity {
   });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
+    String mappedType = 'Unknown';
+    if (json['type'] == 1) mappedType = 'DoctorVerificationSubmitted';
+    if (json['type'] == 2) mappedType = 'DoctorRegistrationSubmitted';
     return NotificationModel(
       id: json['id'],
       title: json['title'],
       message: json['message'],
-      type: json['type'],
+      // type: json['type'],
+      type: mappedType, // 🚀 كدة الـ UI هيفهمها عادي
       isRead: json['isRead'],
       createdAt: DateTime.parse(json['createdAt']),
       relatedEntityType: json['relatedEntityType'],

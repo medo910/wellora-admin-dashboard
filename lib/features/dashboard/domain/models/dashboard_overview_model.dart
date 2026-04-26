@@ -82,10 +82,12 @@
 
 // lib/features/dashboard/data/models/dashboard_overview_model.dart
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/dashboard_overview_entity.dart';
+import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/user_registration_trend_entity.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/models/doctor_stats_model.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/models/recent_activity_model.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/models/recent_ticket_model.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/models/ticket_stats_model.dart';
+import 'package:admin_dashboard_graduation_project/features/dashboard/domain/models/user_registration_trend_model.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/models/user_stats_model.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/models/verification_stats_model.dart';
 
@@ -97,6 +99,7 @@ class DashboardOverviewModel extends DashboardOverviewEntity {
     required super.verificationStats,
     required super.recentActions,
     required super.recentTickets,
+    required super.userRegistrationTrend,
   });
 
   factory DashboardOverviewModel.fromJson(Map<String, dynamic> json) {
@@ -113,6 +116,12 @@ class DashboardOverviewModel extends DashboardOverviewEntity {
       recentTickets: (json['recentActivity']['recentTickets'] as List)
           .map((i) => RecentTicketModel.fromJson(i))
           .toList(),
+      userRegistrationTrend:
+          (json['userRegistrationTrends'] as List? ??
+                  []) // 🚀 تأكد من حرف الـ s في الأخر
+              .map((i) => UserRegistrationTrendModel.fromJson(i))
+              .toList()
+              .cast<UserRegistrationTrendEntity>(),
     );
   }
 }

@@ -11,6 +11,14 @@ final class NotificationInitial extends NotificationState {}
 
 final class NotificationLoading extends NotificationState {}
 
+final class NotificationLoadingMore extends NotificationState {
+  final List<NotificationEntity> notifications;
+  const NotificationLoadingMore(this.notifications);
+
+  @override
+  List<Object> get props => [notifications];
+}
+
 final class NotificationSuccess extends NotificationState {
   final List<NotificationEntity> notifications;
 

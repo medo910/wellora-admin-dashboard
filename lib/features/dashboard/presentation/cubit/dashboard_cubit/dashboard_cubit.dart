@@ -29,8 +29,8 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   DashboardCubit(this.getDashboardOverviewUseCase) : super(DashboardInitial());
 
-  Future<void> getOverview() async {
-    emit(DashboardLoading());
+  Future<void> getOverview({bool isRefresh = false}) async {
+    if (!isRefresh) emit(DashboardLoading());
 
     final result = await getDashboardOverviewUseCase.call();
 
