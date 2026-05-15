@@ -1,4 +1,3 @@
-// lib/features/auth/data/data_sources/auth_remote_data_source.dart
 import 'dart:developer';
 
 import 'package:admin_dashboard_graduation_project/core/network/api_service.dart';
@@ -12,15 +11,13 @@ class AuthRemoteDataSource {
     required String password,
     String? otpCode,
   }) async {
-    // البادي المطلوب بناءً على توضيحك [cite: 73]
     final body = {
       "email": email.trim(),
       "password": password.trim(),
       "otpCode": otpCode ?? "",
       "usePasskey": false,
     };
-    log("Login Request Body: $body"); // لوج للتأكد من البادي قبل الإرسال
-    // نداء إيند بوينت الـ Auth/login [cite: 146, 217]
+    log("Login Request Body: $body");
     return await _apiService.post(endpoint: 'Auth/login', body: body);
   }
 
@@ -44,10 +41,7 @@ class AuthRemoteDataSource {
   }
 
   Future<Map<String, dynamic>> checkToken() async {
-    return await _apiService.get(
-      endpoint: 'auth/token-status-v2',
-      // bearerToken: accessToken,
-    );
+    return await _apiService.get(endpoint: 'auth/token-status-v2');
   }
 
   Future<Map<String, dynamic>> resendOtp({required String mfaToken}) async {

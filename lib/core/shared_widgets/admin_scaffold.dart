@@ -6,7 +6,6 @@ import 'package:admin_dashboard_graduation_project/features/dashboard/presentati
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/widgets/admin_sidebar.dart';
 import 'package:flutter/material.dart';
 
-// lib/shared_widgets/admin_scaffold.dart
 class AdminScaffold extends StatefulWidget {
   final Widget child;
   const AdminScaffold({super.key, required this.child});
@@ -41,17 +40,17 @@ class _AdminScaffoldState extends State<AdminScaffold> {
     return Scaffold(
       body: Row(
         children: [
-          const AdminSidebar(), // الـ Sidebar اللي لسه مخلصينه
+          const AdminSidebar(),
           Expanded(
             child: Column(
               children: [
-                const AdminHeader(), // الهيدر (هعملهولك الخطوة الجاية)
+                const AdminHeader(),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(24),
                     child: widget.child,
                   ),
-                ), // المحتوى المتغير
+                ),
               ],
             ),
           ),

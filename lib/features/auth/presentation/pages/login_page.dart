@@ -17,7 +17,6 @@ class LoginPage extends StatelessWidget {
         create: (context) => sl<AuthCubit>(),
         child: Row(
           children: [
-            // الجنب اليمين: الصورة أو الجرافيك (ظاهر في الويب والتابلت بس)
             if (MediaQuery.of(context).size.width > 800)
               Expanded(
                 flex: 1,
@@ -51,15 +50,13 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
 
-            // الجنب الشمال: فورم التسجيل
             Expanded(
               flex: 1,
               child: Center(
                 child: Container(
                   constraints: const BoxConstraints(maxWidth: 400),
                   padding: const EdgeInsets.all(32),
-                  child:
-                      const LoginForm(), // ويدجيت منفصلة عشان الكود يفضل نظيف
+                  child: const LoginForm(),
                 ),
               ),
             ),

@@ -24,9 +24,8 @@ class DoctorVerificationCubit extends Cubit<DoctorVerificationState> {
 
   int currentPage = 1;
   String? currentStatus;
-  VerificationStatsEntity? lastStats; // 💡 مخزن الإحصائيات عشان الـ UI ميفضاش
+  VerificationStatsEntity? lastStats;
 
-  // 1. جلب البيانات كاملة (الجدول + الإحصائيات)
   Future<void> fetchVerificationData({
     int? page,
     String? status,
@@ -39,47 +38,16 @@ class DoctorVerificationCubit extends Cubit<DoctorVerificationState> {
       currentStatus = (status == "All") ? null : status;
     }
 
-    // currentPage = page ?? currentPage;
-    // currentStatus = (status == "All") ? null : (status ?? currentStatus);
-
-    // بننادي الإحصائيات والبيانات مع بعض
     final statsResult = await getStatsUseCase();
     final listResult = await getVerificationsUseCase(
       page: currentPage,
       status: currentStatus,
     );
 
-    // statsResult.fold(
-    //   (failure) => emit(DoctorVerificationFailure(failure.errmessage)),
-    //   (stats) {
-    //     // listResult.fold(
-    //     //   (failure) => emit(DoctorVerificationFailure(failure.errmessage)),
-    //     //   (list) => emit(DoctorVerificationSuccess(list, stats)),
-    //     // );
-    //     listResult.fold(
-    //       (failure) => emit(DoctorVerificationFailure(failure.errmessage)),
-    //       (paginatedData) {
-    //         // هنا بنبعت كل المعلومات للـ State
-    //         emit(
-    //           DoctorVerificationSuccess(
-    //             verifications: paginatedData.data, // لستة الدكاترة
-    //             stats: stats,
-    //             page: currentPage,
-    //             hasNextPage:
-    //                 paginatedData.hasNextPage, // القيمة دي جاية من الـ API
-    //             totalItems: paginatedData.totalCount,
-    //             currentStatus: currentStatus,
-    //           ),
-    //         );
-    //       },
-    //     );
-    //   },
-    // );
-
     statsResult.fold(
       (failure) => emit(DoctorVerificationFailure(failure.errmessage)),
       (stats) {
-        lastStats = stats; // 💡 بنحفظ آخر إحصائيات جت بنجاح
+        lastStats = stats;
         listResult.fold(
           (failure) => emit(DoctorVerificationFailure(failure.errmessage)),
           (paginatedData) {
@@ -99,30 +67,22 @@ class DoctorVerificationCubit extends Cubit<DoctorVerificationState> {
     );
   }
 
-  // 2. ميثود الموافقة
   Future<void> approveDoc(int doctorId, String? notes) async {
     emit(VerificationActionLoading());
     final result = await approveUseCase(doctorId, notes);
     result.fold(
-      (failure)
-      // => emit(VerificationActionFailure(failure.errmessage)),
-      {
-        // 💡 التشييك السحري: هل الكيوبت لسه مفتوح؟
+      (failure) {
         if (!isClosed) emit(VerificationActionFailure(failure.errmessage));
       },
       (msg) {
-        // emit(VerificationActionSuccess(msg));
-        // fetchVerificationData(status: currentStatus, isRefresh: false);
         if (!isClosed) {
           emit(VerificationActionSuccess(msg));
-          // تحديث البيانات بعد النجاح
           fetchVerificationData(status: currentStatus, isRefresh: false);
         }
       },
     );
   }
 
-  // 3. ميثود الرفض
   Future<void> rejectDoc(int doctorId, String reason, String? notes) async {
     emit(VerificationActionLoading());
     final result = await rejectUseCase(
@@ -131,18 +91,12 @@ class DoctorVerificationCubit extends Cubit<DoctorVerificationState> {
       adminNotes: notes,
     );
     result.fold(
-      (failure)
-      // => emit(VerificationActionFailure(failure.errmessage)),
-      {
-        // 💡 التشييك السحري: هل الكيوبت لسه مفتوح؟
+      (failure) {
         if (!isClosed) emit(VerificationActionFailure(failure.errmessage));
       },
       (msg) {
-        // emit(VerificationActionSuccess(msg));
-        // fetchVerificationData(status: currentStatus, isRefresh: false);
         if (!isClosed) {
           emit(VerificationActionSuccess(msg));
-          // تحديث البيانات بعد النجاح
           fetchVerificationData(status: currentStatus, isRefresh: false);
         }
       },

@@ -7,11 +7,6 @@ import 'package:meta/meta.dart';
 
 part 'auth_state.dart';
 
-// class AuthCubit extends Cubit<AuthState> {
-//   AuthCubit() : super(AuthInitial());
-// }
-
-// lib/features/auth/presentation/manager/auth_cubit.dart
 class AuthCubit extends Cubit<AuthState> {
   final LoginUseCase _loginUseCase;
   final ResendOtpUseCase _resendOtpUseCase;
@@ -31,7 +26,6 @@ class AuthCubit extends Cubit<AuthState> {
       loginResult,
     ) {
       if (loginResult is LoginOtpRequiredEntity) {
-        // حالة طلب الـ OTP (المرحلة الأولى)
         emit(
           LoginOtpRequired(
             mfaToken: loginResult.mfaToken,
@@ -39,7 +33,6 @@ class AuthCubit extends Cubit<AuthState> {
           ),
         );
       } else if (loginResult is LoginSuccessEntity) {
-        // نجاح تسجيل الدخول (المرحلة الثانية)
         emit(LoginSuccess(loginResult.user));
       }
     });

@@ -1,10 +1,7 @@
-// lib/features/support_tickets/data/repositories/support_repository_impl.dart
-
 import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/entities/support_tickets_paginated_entity.dart';
 import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failures.dart';
 import '../../domain/entities/support_stats_entity.dart';
-import '../../domain/entities/support_ticket_entity.dart';
 import '../../domain/entities/ticket_message_entity.dart';
 import '../../domain/repositories/support_repository.dart';
 import '../data_sources/support_remote_data_source.dart';
@@ -12,30 +9,6 @@ import '../data_sources/support_remote_data_source.dart';
 class SupportRepositoryImpl implements SupportRepository {
   final SupportRemoteDataSource remoteDataSource;
   SupportRepositoryImpl(this.remoteDataSource);
-
-  // @override
-  // Future<Either<Failure, List<SupportTicketEntity>>> getTickets({
-  //   int? page,
-  //   String? status,
-  //   String? priority,
-  //   String? category,
-  // }) async {
-  //   try {
-  //     final tickets = await remoteDataSource.getTickets(
-  //       page: page,
-  //       status: status,
-  //       priority: priority,
-  //       category: category,
-  //     );
-  //     return Right(tickets);
-  //   } catch (e) {
-  //     return Left(
-  //       ServerFailure(e.toString()),
-  //     ); // استخدم كلاس الـ Failure اللي عندك
-  //   }
-  // }
-
-  // lib/features/support_tickets/data/repositories/support_repository_impl.dart
 
   @override
   Future<Either<Failure, SupportTicketsPaginatedEntity>> getTickets({

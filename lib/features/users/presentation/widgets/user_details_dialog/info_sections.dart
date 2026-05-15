@@ -1,5 +1,3 @@
-// lib/features/users/presentation/widgets/user_details_dialog/widgets/info_sections.dart
-
 import 'package:flutter/material.dart';
 import '../../../domain/entities/user_entity.dart';
 

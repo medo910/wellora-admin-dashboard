@@ -1,4 +1,3 @@
-// lib/core/theme/app_colors.dart
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -9,7 +8,6 @@ class AppColors {
   static const textPrimary = Color(0xFF0F172A);
   static const textMuted = Color(0xFF64748B);
 
-  // Status Colors
   static const success = Color(0xFF10B981);
   static const warning = Color(0xFFF59E0B);
   static const urgent = Color(0xFFEF4444);

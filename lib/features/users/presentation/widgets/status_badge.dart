@@ -12,7 +12,6 @@ class StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // تحديد اللون والنص بناءً على الـ Booleans
     Color color = Colors.green;
     String label = "Active";
 

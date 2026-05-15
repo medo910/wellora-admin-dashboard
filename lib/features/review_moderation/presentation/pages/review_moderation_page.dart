@@ -1,5 +1,3 @@
-// features/review_moderation/presentation/pages/review_moderation_page.dart
-
 import 'package:admin_dashboard_graduation_project/core/di/injection_container.dart';
 import 'package:admin_dashboard_graduation_project/features/review_moderation/presentation/manager/review_moderation_cubit/review_moderation_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/review_moderation/presentation/widgets/delete_review_dialog.dart';
@@ -11,32 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ReviewModerationPage extends StatelessWidget {
   const ReviewModerationPage({super.key});
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return BlocProvider(
-  //     create: (context) => sl<ReviewModerationCubit>()..fetchReviews(),
-  //     child: Scaffold(
-  //       backgroundColor: Colors.grey.shade50,
-  //       body: BlocConsumer<ReviewModerationCubit, ReviewModerationState>(
-  //         listener: (context, state) {
-  //           if (state is ReviewActionSuccess) {
-  //             ScaffoldMessenger.of(
-  //               context,
-  //             ).showSnackBar(SnackBar(content: Text(state.message)));
-  //           }
-  //         },
-  //         builder: (context, state) {
-  //           return CustomScrollView(
-  //             slivers: [
-  //               const ReviewAppBar(), // هيدر الصفحة والتابات
-  //               _ReviewList(), // قائمة الريفيوهات
-  //             ],
-  //           );
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -45,7 +17,6 @@ class ReviewModerationPage extends StatelessWidget {
         backgroundColor: Colors.grey.shade50,
         body: BlocConsumer<ReviewModerationCubit, ReviewModerationState>(
           listener: (context, state) {
-            // 🚀 الـ Listener الموحد للأكشنز
             if (state is ReviewSuccess && state.actionMessage != null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -106,8 +77,6 @@ void _showRestoreDialog(BuildContext context, int id) {
 }
 // }
 
-// داخل review_moderation_page.dart
-
 class _ReviewList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -120,7 +89,6 @@ class _ReviewList extends StatelessWidget {
         }
 
         if (state is ReviewSuccess) {
-          // 🚀 1. الـ Empty State
           if (state.reviews.isEmpty) {
             return const SliverFillRemaining(
               child: Column(
@@ -145,18 +113,11 @@ class _ReviewList extends StatelessWidget {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) => ReviewCard(
                       review: state.reviews[index],
-                      // onDelete: () => _showDeleteDialog(
-                      //   context,
-                      //   state.reviews[index].reviewId,
-                      // ),
-                      // onRestore: () => context
-                      //     .read<ReviewModerationCubit>()
-                      //     .restoreReview(state.reviews[index].reviewId),
+
                       onDelete: () => _showDeleteDialog(
                         context,
                         state.reviews[index].reviewId,
                       ),
-                      // 🚀 ربطنا الـ Restore بالدايلوج الجديد
                       onRestore: () => _showRestoreDialog(
                         context,
                         state.reviews[index].reviewId,
@@ -165,7 +126,6 @@ class _ReviewList extends StatelessWidget {
                     childCount: state.reviews.length,
                   ),
                 ),
-                // 🚀 2. الـ Pagination Bar
                 SliverToBoxAdapter(
                   child: _PaginationBar(
                     currentPage: state.currentPage,

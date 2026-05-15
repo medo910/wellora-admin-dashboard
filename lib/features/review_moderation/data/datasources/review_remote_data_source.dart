@@ -1,4 +1,3 @@
-// features/review_moderation/data/datasources/review_remote_data_source.dart
 import 'package:admin_dashboard_graduation_project/core/network/api_service.dart';
 
 abstract class ReviewRemoteDataSource {

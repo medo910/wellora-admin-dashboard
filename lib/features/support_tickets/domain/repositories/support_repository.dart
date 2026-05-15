@@ -1,19 +1,10 @@
-// lib/features/support_tickets/domain/repositories/support_repository.dart
 import 'package:admin_dashboard_graduation_project/core/errors/failures.dart';
 import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/entities/support_stats_entity.dart';
-import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/entities/support_ticket_entity.dart';
 import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/entities/support_tickets_paginated_entity.dart';
 import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/entities/ticket_message_entity.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class SupportRepository {
-  // Future<Either<Failure, List<SupportTicketEntity>>> getTickets({
-  //   int page,
-  //   String? status,
-  //   String? priority,
-  //   String? category,
-  // });
-
   Future<Either<Failure, SupportTicketsPaginatedEntity>> getTickets({
     int? page,
     int? pageSize,

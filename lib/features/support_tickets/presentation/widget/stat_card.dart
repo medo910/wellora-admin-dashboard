@@ -1,4 +1,3 @@
-// widget/stat_card.dart
 import 'package:flutter/material.dart';
 
 class StatCard extends StatelessWidget {
@@ -12,6 +11,7 @@ class StatCard extends StatelessWidget {
     required this.value,
     required this.icon,
     required this.color,
+    super.key,
   });
 
   @override

@@ -5,7 +5,6 @@ sealed class UsersState {}
 
 final class UsersInitial extends UsersState {}
 
-// حالات جلب البيانات (الفلترة والبحث)
 class UsersLoading extends UsersState {}
 
 class UsersSuccess extends UsersState {
@@ -18,7 +17,6 @@ class UsersFailure extends UsersState {
   UsersFailure(this.errMessage);
 }
 
-// حالات الأكشنز (Block, Suspend, etc.)
 class UserActionLoading extends UsersState {}
 
 class UserActionSuccess extends UsersState {

@@ -1,5 +1,3 @@
-// lib/features/users/data/data_sources/users_remote_data_source.dart
-
 import 'package:admin_dashboard_graduation_project/core/network/api_service.dart';
 import 'package:admin_dashboard_graduation_project/features/users/data/models/user_status_details_model.dart';
 
@@ -75,11 +73,7 @@ class UsersRemoteDataSourceImpl implements UsersRemoteDataSource {
   }) async {
     await apiService.post(
       endpoint: 'admin/users/suspend',
-      body: {
-        'userId': userId,
-        'reason': reason,
-        'suspensionEndDate': endDate, // ISO 8601 String
-      },
+      body: {'userId': userId, 'reason': reason, 'suspensionEndDate': endDate},
     );
   }
 
@@ -94,7 +88,7 @@ class UsersRemoteDataSourceImpl implements UsersRemoteDataSource {
   @override
   Future<UserStatusDetailsModel> getUserStatus(int userId) async {
     final response = await apiService.get(
-      endpoint: 'admin/users/$userId/status', // المسار اللي أحمد الدسوقي عامله
+      endpoint: 'admin/users/$userId/status',
     );
     return UserStatusDetailsModel.fromJson(response);
   }

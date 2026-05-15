@@ -16,17 +16,15 @@ final class ReviewSuccess extends ReviewModerationState {
   final int totalCount;
   final int currentPage;
   final bool hasNextPage;
-  final bool
-  isShowingDeleted; // 💡 عشان نعرف إحنا في تاب الـ Active ولا الـ Deleted
+  final bool isShowingDeleted;
 
-  // الفلاتر الحالية عشان الـ UI يفضل ثابت
   final int? currentDoctorId;
   final int? currentUserId;
   final double? minRating;
   final double? maxRating;
   final DateTimeRange? currentDateRange;
-  final bool isActionLoading; // 🚀 عشان نظهر Loading خفيف على الزرار بس
-  final String? actionMessage; // 🚀 عشان الـ Listener يظهر SnackBar
+  final bool isActionLoading;
+  final String? actionMessage;
 
   const ReviewSuccess({
     required this.reviews,
@@ -69,7 +67,7 @@ final class ReviewSuccess extends ReviewModerationState {
       maxRating: maxRating ?? this.maxRating,
       currentDateRange: currentDateRange ?? this.currentDateRange,
       isActionLoading: isActionLoading ?? this.isActionLoading,
-      actionMessage: actionMessage, // بنسيبه null لو مبعتناش قيمة
+      actionMessage: actionMessage,
     );
   }
 
@@ -97,7 +95,6 @@ final class ReviewFailure extends ReviewModerationState {
   List<Object?> get props => [errorMessage];
 }
 
-// حالات الأكشنز المنفصلة (Delete / Restore)
 final class ReviewActionLoading extends ReviewModerationState {}
 
 final class ReviewActionSuccess extends ReviewModerationState {

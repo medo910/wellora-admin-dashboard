@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../domain/entities/user_entity.dart';
 
 class RoleBadge extends StatelessWidget {
-  final UserType type; // غيرنا الإسم لـ type
+  final UserType type;
   const RoleBadge({super.key, required this.type});
 
   @override

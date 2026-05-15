@@ -8,52 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SupportChatPage extends StatelessWidget {
-  final SupportTicketEntity ticket; // بنستلم التيكت اللي ضغطنا عليها
+  final SupportTicketEntity ticket;
 
   const SupportChatPage({super.key, required this.ticket});
-
-  // presentation/pages/support_chat_page.dart
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return BlocProvider(
-  //     create: (context) => sl<SupportChatCubit>()..fetchMessages(ticket.id),
-  //     // 🚀 الحل هنا: استخدام الـ builder عشان ناخد context "ابن" للـ BlocProvider
-  //     child: Builder(
-  //       builder: (context) {
-  //         return Scaffold(
-  //           appBar: AppBar(
-  //             title: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Text(ticket.title, style: const TextStyle(fontSize: 16)),
-  //                 Text(
-  //                   "TKT-${ticket.id.toString().padLeft(4, '0')} • ${ticket.status} • ${ticket.priority} • ${ticket.category}",
-  //                   style: const TextStyle(fontSize: 12, color: Colors.grey),
-  //                 ),
-  //               ],
-  //             ),
-  //             actions: [
-  //               // نبعت الـ context بتاع الـ Builder (اللي شايف الكيوبت)
-  //               _buildChatMenu(context),
-  //             ],
-  //           ),
-  //           body: Column(
-  //             children: [
-  //               const Expanded(child: ChatMessagesList()),
-  //               ChatBottomBar(ticketId: ticket.id),
-  //             ],
-  //           ),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      // 💡 بننادي initChat عشان ندي الكيوبت القيم الحالية للتيكت قبل ما يبدأ
       create: (context) => sl<SupportChatCubit>()
         ..initChat(ticket)
         ..fetchMessages(ticket.id),
@@ -61,14 +22,11 @@ class SupportChatPage extends StatelessWidget {
         builder: (context) {
           return Scaffold(
             appBar: AppBar(
-              // 🚀 الـ BlocBuilder هنا هو اللي هيخلي البيانات (Open, Low, إلخ) تتحدث لحظياً
               title: BlocBuilder<SupportChatCubit, SupportChatState>(
                 builder: (context, state) {
-                  // القيم الافتراضية اللي جاية من التيكت أصلاً
                   String currentStatus = ticket.status;
                   String currentPriority = ticket.priority;
 
-                  // لو الـ Cubit نجح في التحديث، بناخد القيم الجديدة منه
                   if (state is SupportChatSuccess) {
                     currentStatus = state.status;
                     currentPriority = state.priority;
@@ -118,7 +76,6 @@ class SupportChatPage extends StatelessWidget {
         _handleMenuAction(context, value);
       },
       itemBuilder: (context) => [
-        // --- قسم الحالات ---
         const PopupMenuItem(
           enabled: false,
           child: Text(
@@ -157,7 +114,6 @@ class SupportChatPage extends StatelessWidget {
 
         const PopupMenuDivider(),
 
-        // --- قسم الأولوية ---
         const PopupMenuItem(
           enabled: false,
           child: Text(
@@ -196,7 +152,6 @@ class SupportChatPage extends StatelessWidget {
 
         const PopupMenuDivider(),
 
-        // --- أدوات إضافية ---
         _buildMenuItem(
           value: "UserInfo",
           label: "User Profile",

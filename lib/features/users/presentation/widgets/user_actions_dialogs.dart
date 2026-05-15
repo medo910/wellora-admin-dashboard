@@ -54,7 +54,6 @@ void _showActionWithReasonDialog({
   );
 }
 
-// 1. ميثود التأكيد البسيط (بدون TextField)
 void _showSimpleConfirmDialog({
   required BuildContext context,
   required String title,

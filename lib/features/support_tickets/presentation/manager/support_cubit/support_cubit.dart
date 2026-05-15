@@ -33,7 +33,6 @@ class SupportCubit extends Cubit<SupportState> {
     _listenToGlobalEvents();
   }
 
-  // 1. 🚀 المتغيرات الداخلية بقيم ابتدائية واضحة (عشان الـ Filter Sheet تقرأها)
   int _currentPage = 1;
   int _pageSize = 10;
   String _currentStatus = "All";
@@ -47,7 +46,6 @@ class SupportCubit extends Cubit<SupportState> {
   int? _targetUserId;
   Timer? _searchTimer;
 
-  // 📡 Listeners (نفس الكود بتاعك شغال صح)
   void _listenToGlobalEvents() {
     _signalRService.on("TicketUpdated", (arguments) {
       if (arguments != null && arguments.isNotEmpty) {
@@ -76,7 +74,6 @@ class SupportCubit extends Cubit<SupportState> {
     );
   }
 
-  // 📥 الميثود الموحدة للجلب (REST)
   Future<void> fetchSupportData({
     int? page,
     String? status,
@@ -87,7 +84,6 @@ class SupportCubit extends Cubit<SupportState> {
     String? toDate,
     bool isRefresh = true,
   }) async {
-    // 2. 🚀 تحديث المخزن الداخلي دايماً
     if (page != null) _currentPage = page;
     if (status != null) _currentStatus = status;
     if (priority != null) _currentPriority = priority;
@@ -99,7 +95,6 @@ class SupportCubit extends Cubit<SupportState> {
 
     if (isRefresh) emit(SupportLoading());
 
-    // 3. 🚀 تحويل "All" لـ null فقط عند مناداة الـ API (عشان الباك-إند)
     final results = await Future.wait([
       getStatsUseCase(),
       getTicketsUseCase(
@@ -125,7 +120,6 @@ class SupportCubit extends Cubit<SupportState> {
       ticketsResult.fold((f) => emit(SupportFailure(f.errmessage)), (
         paginatedData,
       ) {
-        // 4. 🚀 نبعت القيم "الأصلية" (زي All) للـ UI عشان الفيلتر ميتصفّرش
         emit(
           SupportSuccess(
             tickets: paginatedData.tickets,
@@ -133,7 +127,7 @@ class SupportCubit extends Cubit<SupportState> {
             currentPage: _currentPage,
             hasNextPage: paginatedData.hasNextPage,
             totalItems: paginatedData.totalCount,
-            currentStatus: _currentStatus, // هيروح للـ UI كـ "All"
+            currentStatus: _currentStatus,
             currentPriority: _currentPriority,
             currentCategory: _currentCategory,
             currentDateRange: (_fromDate != null && _toDate != null)
@@ -148,7 +142,6 @@ class SupportCubit extends Cubit<SupportState> {
     });
   }
 
-  // 🛠️ باقي الميثودات (In-Memory Update & Mappers)
   void _handleInMemoryUpdate({
     required String id,
     required String newStatus,
@@ -163,7 +156,6 @@ class SupportCubit extends Cubit<SupportState> {
         return t;
       }).toList();
 
-      // فلترة فورية لو الأدمن واقف في تاب معين
       if (currentState.currentStatus != "All") {
         updatedList.removeWhere(
           (t) =>
@@ -198,19 +190,15 @@ class SupportCubit extends Cubit<SupportState> {
   }
 
   void searchTickets(String query) {
-    // 1. كنسل أي تايمر قديم عشان لو المستخدم بيكتب بسرعة ما نبعتش ريكويستات كتير (Debouncing)
     _searchTimer?.cancel();
 
     _searchTimer = Timer(const Duration(milliseconds: 600), () {
-      // 2. تحديث قيمة البحث الحالية
       _currentSearch = query.isEmpty ? null : query;
 
-      // 3. دايماً ارجع لصفحة 1 لما تبدأ بحث جديد
       _currentPage = 1;
 
       print("🔍 Searching for: $_currentSearch");
 
-      // 4. نداء ميثود الـ Fetch مع تعطيل الـ Loading Spinner عشان اليوزر ما يتضايقش وهو بيكتب
       fetchSupportData(isRefresh: false);
     });
   }

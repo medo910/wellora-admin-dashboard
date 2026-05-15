@@ -1,4 +1,3 @@
-// lib/features/auth/domain/entities/auth_entity.dart
 class AuthEntity {
   final String id;
   final String name;

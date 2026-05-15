@@ -1,7 +1,5 @@
-// lib/features/dashboard/presentation/widgets/notification_item.dart
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/notification_entity.dart';
 import 'package:flutter/material.dart';
-// تأكد من عمل import لـ NotificationEntity و AppColors لو موجودة
 
 class NotificationItem extends StatelessWidget {
   final NotificationEntity notification;

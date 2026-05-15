@@ -1,5 +1,3 @@
-// lib/features/users/domain/use_cases/get_user_status_use_case.dart
-
 import 'package:admin_dashboard_graduation_project/core/errors/failures.dart';
 import 'package:admin_dashboard_graduation_project/features/users/domain/entities/user_status_details_entity.dart';
 import 'package:admin_dashboard_graduation_project/features/users/domain/repositories/users_repository.dart';

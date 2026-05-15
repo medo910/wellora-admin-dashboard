@@ -1,13 +1,13 @@
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/ticket_stats_entity.dart';
 
 class TicketStatsModel extends TicketStatsEntity {
-  TicketStatsModel({
+  const TicketStatsModel({
     required super.totalTickets,
     required super.openTickets,
     required super.closedTickets,
     // required super.urgentTickets,
     required super.ticketsByCategory,
-    required super.percentageChange, // 🚀 لزوم التشارت الصغير
+    required super.percentageChange,
     required super.lastSevenDaysTrend, //
     required super.resolvedTickets,
   });

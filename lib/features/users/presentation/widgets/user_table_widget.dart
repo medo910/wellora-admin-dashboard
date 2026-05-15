@@ -1,9 +1,8 @@
-// lib/features/users/presentation/widgets/user_table_widget.dart
 import 'package:admin_dashboard_graduation_project/features/users/presentation/widgets/user_actions_menu.dart';
 import 'package:flutter/material.dart';
 import '../../domain/entities/user_entity.dart';
 import 'status_badge.dart';
-import 'role_badge.dart'; // تأكد إنك كريت الـ RoleBadge اللي عملناها سوا
+import 'role_badge.dart';
 
 class UserTableWidget extends StatelessWidget {
   final List<UserEntity> users;
@@ -32,9 +31,9 @@ class UserTableWidget extends StatelessWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minWidth: MediaQuery.of(context).size.width - 320,
-              ), // لضمان العرض
+              ),
               child: DataTable(
-                columnSpacing: 20, // زودنا المسافة شوية للراحة
+                columnSpacing: 20,
                 // onSelectAll: onSelectAll,
                 columns: const [
                   DataColumn(

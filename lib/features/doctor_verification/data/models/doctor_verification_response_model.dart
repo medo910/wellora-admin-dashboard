@@ -1,5 +1,3 @@
-// lib/features/doctor_verification/data/models/doctor_verification_response_model.dart
-
 import 'doctor_verification_model.dart';
 
 class DoctorVerificationResponseModel {

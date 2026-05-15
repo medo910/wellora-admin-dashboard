@@ -1,5 +1,5 @@
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/notification_entity.dart';
-import 'package:dartz/dartz.dart'; // أنت ضايفها
+import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failures.dart';
 
 abstract class NotificationRepository {

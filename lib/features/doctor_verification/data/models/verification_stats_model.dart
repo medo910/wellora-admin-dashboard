@@ -1,4 +1,3 @@
-// lib/features/doctor_verification/data/models/verification_stats_model.dart
 import '../../domain/entities/verification_stats_entity.dart';
 
 class VerificationStatsModel extends VerificationStatsEntity {

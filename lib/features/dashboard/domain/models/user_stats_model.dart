@@ -2,7 +2,7 @@
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/user_stats_entity.dart';
 
 class UserStatsModel extends UserStatsEntity {
-  UserStatsModel({
+  const UserStatsModel({
     required super.totalUsers,
     required super.totalDoctors,
     required super.totalPatients,
@@ -11,7 +11,7 @@ class UserStatsModel extends UserStatsEntity {
     required super.activeUsers,
     required super.newUsersThisMonth,
     required super.percentageChange,
-    required super.lastSevenDaysTrend, // 🚀 الجديد
+    required super.lastSevenDaysTrend,
   });
 
   factory UserStatsModel.fromJson(Map<String, dynamic> json) {

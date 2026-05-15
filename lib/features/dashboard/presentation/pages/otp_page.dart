@@ -1,4 +1,3 @@
-// lib/features/auth/presentation/pages/otp_page.dart
 import 'dart:async';
 
 import 'package:admin_dashboard_graduation_project/core/routes/app_router.dart';
@@ -50,7 +49,6 @@ class _OtpPageState extends State<OtpPage> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is LoginSuccess) {
-          // 1. التوجيه للداشبورد فور النجاح
           context.go(AppRouter.kDashboard);
         }
 
@@ -90,7 +88,6 @@ class _OtpPageState extends State<OtpPage> {
                   ),
                   const SizedBox(height: 32),
 
-                  // حقول الـ OTP (ممكن تستخدم pinput أو TextField عادي)
                   TextField(
                     controller: _otpController,
                     textAlign: TextAlign.center,
@@ -159,7 +156,6 @@ class _OtpPageState extends State<OtpPage> {
             onPressed: state is LoginLoading
                 ? null
                 : () {
-                    // هنا بننادي على اللوج إن تاني بس بالـ OTP
                     context.read<AuthCubit>().login(
                       email: widget.email,
                       password: widget.password,

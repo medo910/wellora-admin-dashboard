@@ -60,13 +60,11 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
       },
     );
 
-    // بنبعت الـ response كله للموديل وهو يفرطه
     return SupportTicketsPaginatedModel.fromJson(response);
   }
 
   @override
   Future<List<TicketMessageModel>> getTicketMessages(String ticketId) async {
-    // 💡 لاحظ المسار الجديد اللي الباك عمله
     final response = await apiService.get(
       endpoint: "tickets/$ticketId/messages",
     );
@@ -89,7 +87,6 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
 
   @override
   Future<void> updateTicketStatus(String ticketId, String status) async {
-    // 💡 استخدام PATCH بناءً على التعديل الأخير
     await apiService.patch(
       endpoint: "tickets/$ticketId",
       data: {"status": status},
@@ -98,7 +95,6 @@ class SupportRemoteDataSourceImpl implements SupportRemoteDataSource {
 
   @override
   Future<void> updateTicketPriority(String ticketId, String priority) async {
-    // 💡 دي لسه PUT زي ما هي
     await apiService.put(
       endpoint: "admin/tickets/priority",
       data: {"ticketId": ticketId, "priority": priority},

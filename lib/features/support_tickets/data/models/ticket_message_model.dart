@@ -11,21 +11,10 @@ class TicketMessageModel extends TicketMessageEntity {
     required super.createdAt,
   });
 
-  // factory TicketMessageModel.fromJson(Map<String, dynamic> json) {
-  //   return TicketMessageModel(
-  //     messageId: json['messageId'] ?? json['id'], // بندعم الشكلين عشان التوحيد
-  //     ticketId: json['ticketId'],
-  //     senderName: json['senderName'] ?? json['sender'] ?? "System",
-  //     content: json['content'] ?? json['message'], // بندعم content و message
-  //     isFromAdmin: json['isFromAdmin'] ?? (json['sender'] == "Admin"),
-  //     createdAt: DateTime.parse(json['createdAt'] ?? json['timestamp']),
-  //   );
-  // }
   factory TicketMessageModel.fromJson(Map<String, dynamic> json) {
     try {
       return TicketMessageModel(
-        messageId: (json['messageId'] ?? json['id'] ?? "")
-            .toString(), // تحويل لـ String دائماً
+        messageId: (json['messageId'] ?? json['id'] ?? "").toString(),
         ticketId: (json['ticketId'] ?? "").toString(),
         senderName: json['senderName'] ?? json['sender'] ?? "System",
         content: json['content'] ?? json['message'] ?? "",
@@ -36,7 +25,6 @@ class TicketMessageModel extends TicketMessageEntity {
       );
     } catch (e) {
       print("❌ Error Parsing TicketMessageModel: $e");
-      // رجع أوبجكت افتراضي عشان الأبلكيشن ميوقفش
       return TicketMessageModel(
         messageId: "",
         ticketId: "",

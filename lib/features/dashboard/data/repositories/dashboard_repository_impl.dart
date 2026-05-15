@@ -1,4 +1,3 @@
-// lib/features/dashboard/data/repositories/dashboard_repository_impl.dart
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/models/dashboard_overview_model.dart';
 import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failures.dart';
@@ -15,8 +14,6 @@ class DashboardRepositoryImpl implements DashboardRepository {
     try {
       final response = await remoteDataSource.getOverview();
 
-      // هنا بنحول الـ JSON للموديل اللي أنت كتبته
-      // تأكد إن الـ JSON اللي راجع متوافق مع الـ fromJson بتاعك
       final model = DashboardOverviewModel.fromJson(response);
 
       return Right(model);

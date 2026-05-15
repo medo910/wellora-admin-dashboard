@@ -61,30 +61,20 @@ import 'package:get_it/get_it.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  // 1. Core & Network (مرة واحدة بس لكل حاجة)
   sl.registerLazySingleton(() => Dio());
   sl.registerLazySingleton(() => const FlutterSecureStorage());
   sl.registerLazySingleton(() => ApiService());
   sl.registerLazySingleton<SignalRService>(() => SignalRService());
 
-  // 2. Auth Feature
   sl.registerLazySingleton(() => AuthRemoteDataSource(sl<ApiService>()));
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
   sl.registerLazySingleton(() => LoginUseCase(sl()));
   sl.registerLazySingleton(() => ResendOtpUseCase(sl()));
   sl.registerFactory(() => AuthCubit(sl(), sl()));
 
-  // core/di/injection_container.dart
-
-  // لازم نسجل الـ SessionManager كـ LazySingleton ونبعتله الـ Repository اللي هو محتاجه
   sl.registerLazySingleton(() => SessionManager(sl<AuthRepository>()));
 
-  // 3. Dashboard Feature
-  // تأكد إن السطور دي موجودة مرة واحدة فقط!
-  sl.registerLazySingleton(
-    () => SidebarCubit(),
-  ); // الكيوبت اللي حل المشكلة اللي فاتت
-  // ⚠️ السطرين دول هما اللي ناقصين ومسببين المشكلة:
+  sl.registerLazySingleton(() => SidebarCubit());
   sl.registerLazySingleton(() => DashboardRemoteDataSource(sl<ApiService>()));
   sl.registerLazySingleton<DashboardRepository>(
     () => DashboardRepositoryImpl(sl()),
@@ -92,8 +82,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetDashboardOverviewUseCase(sl()));
   sl.registerFactory(() => DashboardCubit(sl()));
 
-  // 4. Users Feature
-  // Data Sources
   sl.registerLazySingleton<UsersRemoteDataSource>(
     () => UsersRemoteDataSourceImpl(sl()),
   );
@@ -103,10 +91,8 @@ Future<void> init() async {
     () => NotificationRepositoryImpl(sl()),
   );
 
-  // Repository
   sl.registerLazySingleton<UsersRepository>(() => UsersRepositoryImpl(sl()));
 
-  // Use Cases
   sl.registerLazySingleton(() => GetUsersUseCase(sl()));
   sl.registerLazySingleton(() => BlockUserUseCase(sl()));
   sl.registerLazySingleton(() => UnblockUserUseCase(sl()));
@@ -114,7 +100,6 @@ Future<void> init() async {
   sl.registerLazySingleton(() => UnsuspendUserUseCase(sl()));
   sl.registerLazySingleton(() => GetUserStatusUseCase(sl()));
 
-  // Cubit
   sl.registerFactory(
     () => UsersCubit(
       getUsersUseCase: sl(),
@@ -126,24 +111,19 @@ Future<void> init() async {
     ),
   );
 
-  // 5. Doctor Verification Feature
-  // Data Sources
   sl.registerLazySingleton<DoctorVerificationRemoteDataSource>(
     () => DoctorVerificationRemoteDataSourceImpl(sl()),
   );
 
-  // Repository
   sl.registerLazySingleton<DoctorVerificationRepository>(
     () => DoctorVerificationRepositoryImpl(sl()),
   );
 
-  // Use Cases
   sl.registerLazySingleton(() => GetVerificationsUseCase(sl()));
   sl.registerLazySingleton(() => ApproveVerificationUseCase(sl()));
   sl.registerLazySingleton(() => RejectVerificationUseCase(sl()));
   sl.registerLazySingleton(() => GetVerificationStatsUseCase(sl()));
 
-  // Cubit
   sl.registerFactory(
     () => DoctorVerificationCubit(
       getVerificationsUseCase: sl(),
@@ -153,18 +133,14 @@ Future<void> init() async {
     ),
   );
 
-  // 6. Support Tickets Feature
-  // 1. Data Sources
   sl.registerLazySingleton<SupportRemoteDataSource>(
     () => SupportRemoteDataSourceImpl(sl<ApiService>()),
   );
 
-  // 2. Repositories
   sl.registerLazySingleton<SupportRepository>(
     () => SupportRepositoryImpl(sl<SupportRemoteDataSource>()),
   );
 
-  // 3. Use Cases
   sl.registerLazySingleton(() => GetTicketsUseCase(sl<SupportRepository>()));
   sl.registerLazySingleton(
     () => GetSupportStatsUseCase(sl<SupportRepository>()),
@@ -182,7 +158,6 @@ Future<void> init() async {
     () => UpdateTicketPriorityUseCase(sl<SupportRepository>()),
   );
 
-  // 4. Cubit
   sl.registerFactory(
     () => SupportCubit(
       getTicketsUseCase: sl<GetTicketsUseCase>(),

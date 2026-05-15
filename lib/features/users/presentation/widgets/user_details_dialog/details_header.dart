@@ -1,5 +1,3 @@
-// lib/features/users/presentation/widgets/user_details_dialog/widgets/details_header.dart
-
 import 'package:admin_dashboard_graduation_project/features/users/presentation/widgets/role_badge.dart';
 import 'package:admin_dashboard_graduation_project/features/users/presentation/widgets/status_badge.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,3 @@
-// lib/features/auth/data/models/user_data_model.dart
-
 class UserDataModel {
   final String userId;
   final String name;
@@ -15,7 +13,6 @@ class UserDataModel {
     required this.jti,
   });
 
-  // فك التشفير من الـ JWT Payload
   factory UserDataModel.fromJwtPayload(Map<String, dynamic> payload) {
     return UserDataModel(
       userId: (payload['UserID'] ?? payload['uid'] ?? '').toString(),

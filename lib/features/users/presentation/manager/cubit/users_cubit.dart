@@ -32,7 +32,6 @@ class UsersCubit extends Cubit<UsersState> {
   int patientsPage = 1;
   String? lastSearchTerm;
 
-  // 1. جلب المستخدمين (مع دعم البحث والفلترة)
   Future<void> fetchAllUsers({
     String? searchTerm,
     bool isRefresh = true,
@@ -52,7 +51,6 @@ class UsersCubit extends Cubit<UsersState> {
     );
   }
 
-  // 2. ميثود موحدة لتنفيذ الأكشنز (Block, Unblock, etc.)
   Future<void> _performAction(
     Future<dynamic> actionCall,
     String successMsg,
@@ -62,12 +60,10 @@ class UsersCubit extends Cubit<UsersState> {
 
     result.fold((failure) => emit(UserActionFailure(failure.errmessage)), (_) {
       emit(UserActionSuccess(successMsg));
-      // تحديث القائمة فوراً بعد نجاح الأكشن بدون إظهار Loading الصفحة كاملة
       fetchAllUsers(searchTerm: lastSearchTerm, isRefresh: false);
     });
   }
 
-  // أكشن الحظر
   Future<void> blockUser(int userId, String reason) async {
     await _performAction(
       blockUserUseCase(userId, reason),
@@ -75,7 +71,6 @@ class UsersCubit extends Cubit<UsersState> {
     );
   }
 
-  // أكشن فك الحظر
   Future<void> unblockUser(int userId) async {
     await _performAction(
       unblockUserUseCase(userId),
@@ -83,7 +78,6 @@ class UsersCubit extends Cubit<UsersState> {
     );
   }
 
-  // أكشن الإيقاف المؤقت
   Future<void> suspendUser(int userId, String reason, String endDate) async {
     await _performAction(
       suspendUserUseCase(userId, reason, endDate),
@@ -91,7 +85,6 @@ class UsersCubit extends Cubit<UsersState> {
     );
   }
 
-  // أكشن فك الإيقاف
   Future<void> unsuspendUser(int userId) async {
     await _performAction(
       unsuspendUserUseCase(userId),
@@ -99,13 +92,11 @@ class UsersCubit extends Cubit<UsersState> {
     );
   }
 
-  // ميثود لجلب حالة المستخدم (ممكن نستخدمها في الـ UserDetailsPage)
   Future<UserStatusDetailsEntity> fetchUserStatus(int userId) async {
     final result = await getUserStatusUseCase(userId);
 
     return result.fold(
-      (failure) =>
-          UserStatusDetailsEntity(), // في حالة الفشل بنرجع Entity فاضية
+      (failure) => UserStatusDetailsEntity(),
       (statusDetails) => statusDetails,
     );
   }

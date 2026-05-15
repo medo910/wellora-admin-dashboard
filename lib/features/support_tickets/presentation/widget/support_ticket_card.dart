@@ -1,10 +1,9 @@
-// widgets/support_ticket_card.dart
 import 'package:admin_dashboard_graduation_project/core/color_helper.dart';
 import 'package:admin_dashboard_graduation_project/features/support_tickets/presentation/pages/support_chat_page.dart';
 import 'package:admin_dashboard_graduation_project/features/support_tickets/presentation/widget/app_padge.dart';
 import 'package:flutter/material.dart';
 import '../../domain/entities/support_ticket_entity.dart';
-import 'package:intl/intl.dart'; // عشان ننسق التاريخ
+import 'package:intl/intl.dart';
 
 class SupportTicketCard extends StatelessWidget {
   final SupportTicketEntity ticket;
@@ -22,7 +21,6 @@ class SupportTicketCard extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          // TODO: نفتح صفحة الشات (Messages)
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -36,14 +34,12 @@ class SupportTicketCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 1. Header (ID, Priority, Status, Category)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [_buildLeftHeader(), _buildRightHeader()],
               ),
               const SizedBox(height: 12),
 
-              // 2. Body (Title & Description)
               Text(
                 ticket.title,
                 style: const TextStyle(
@@ -62,7 +58,6 @@ class SupportTicketCard extends StatelessWidget {
               ),
               const SizedBox(height: 16),
 
-              // 3. Footer (User Info, Messages Count, Date)
               _buildFooter(),
             ],
           ),
@@ -71,7 +66,6 @@ class SupportTicketCard extends StatelessWidget {
     );
   }
 
-  // --- Header Widgets ---
   Widget _buildLeftHeader() {
     return Row(
       children: [
@@ -96,7 +90,6 @@ class SupportTicketCard extends StatelessWidget {
   Widget _buildRightHeader() {
     return Row(
       children: [
-        // _StatusBadge(status: ticket.status),
         AppBadge(label: ticket.status, color: getStatusColor(ticket.status)),
         const SizedBox(width: 8),
         _CategoryBadge(category: ticket.category),
@@ -104,7 +97,6 @@ class SupportTicketCard extends StatelessWidget {
     );
   }
 
-  // --- Footer Widget ---
   Widget _buildFooter() {
     return Row(
       children: [
@@ -144,76 +136,74 @@ class SupportTicketCard extends StatelessWidget {
   }
 }
 
-// --- Internal Helper Badges (للتبسيط والنضافة) ---
+// class _PriorityBadge extends StatelessWidget {
+//   final String priority;
+//   const _PriorityBadge({required this.priority});
 
-class _PriorityBadge extends StatelessWidget {
-  final String priority;
-  const _PriorityBadge({required this.priority});
+//   @override
+//   Widget build(BuildContext context) {
+//     Color color;
+//     switch (priority.toLowerCase()) {
+//       case 'urgent':
+//         color = const Color(0xFFEF4444);
+//         break;
+//       case 'high':
+//         color = Colors.orange;
+//         break;
+//       case 'medium':
+//         color = Colors.blue;
+//         break;
+//       default:
+//         color = Colors.grey;
+//     }
+//     return Container(
+//       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+//       decoration: BoxDecoration(
+//         color: color.withOpacity(0.1),
+//         borderRadius: BorderRadius.circular(4),
+//       ),
+//       child: Text(
+//         priority,
+//         style: TextStyle(
+//           color: color,
+//           fontSize: 10,
+//           fontWeight: FontWeight.bold,
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    Color color;
-    switch (priority.toLowerCase()) {
-      case 'urgent':
-        color = const Color(0xFFEF4444);
-        break;
-      case 'high':
-        color = Colors.orange;
-        break;
-      case 'medium':
-        color = Colors.blue;
-        break;
-      default:
-        color = Colors.grey;
-    }
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        priority,
-        style: TextStyle(
-          color: color,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-}
+// class _StatusBadge extends StatelessWidget {
+//   final String status;
+//   const _StatusBadge({required this.status});
 
-class _StatusBadge extends StatelessWidget {
-  final String status;
-  const _StatusBadge({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.orange.shade50,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.orange.shade100),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.access_time, size: 12, color: Colors.orange.shade700),
-          const SizedBox(width: 4),
-          Text(
-            status,
-            style: TextStyle(
-              color: Colors.orange.shade700,
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+//       decoration: BoxDecoration(
+//         color: Colors.orange.shade50,
+//         borderRadius: BorderRadius.circular(20),
+//         border: Border.all(color: Colors.orange.shade100),
+//       ),
+//       child: Row(
+//         children: [
+//           Icon(Icons.access_time, size: 12, color: Colors.orange.shade700),
+//           const SizedBox(width: 4),
+//           Text(
+//             status,
+//             style: TextStyle(
+//               color: Colors.orange.shade700,
+//               fontSize: 10,
+//               fontWeight: FontWeight.w500,
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class _CategoryBadge extends StatelessWidget {
   final String category;

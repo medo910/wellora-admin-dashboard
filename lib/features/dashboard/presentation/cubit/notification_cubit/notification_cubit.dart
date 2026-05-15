@@ -12,7 +12,7 @@ class NotificationCubit extends Cubit<NotificationState> {
   final SignalRService signalRService;
   NotificationCubit(this.repository, this.signalRService)
     : super(NotificationInitial()) {
-    _subscribeToSignalR(); // 💡 دلوقتى أول ما الكيوبت يتكريت، هيبدأ يسمع فوراً
+    _subscribeToSignalR();
   }
   int unreadCount = 0;
   int currentPage = 1;
@@ -48,7 +48,6 @@ class NotificationCubit extends Cubit<NotificationState> {
   }
 
   Future<void> fetchMore() async {
-    // 💡 تأكد إننا في حالة تسمح بالتحميل ومفيش تحميل شغال حالياً
     if (!hasNextPage ||
         state is NotificationLoadingMore ||
         state is! NotificationSuccess)
@@ -67,17 +66,9 @@ class NotificationCubit extends Cubit<NotificationState> {
     });
   }
 
-  // Future<void> fetchNotifications() async {
-  //   emit(NotificationLoading());
-  //   final result = await repository.getNotifications();
-  //   result.fold((f) => emit(NotificationFailure(f.errmessage)), (data) {
-  //     unreadCount = data.unreadCount;
-  //     emit(NotificationSuccess(data.notifications));
-  //   });
-  // }
   Future<void> fetchNotifications() async {
     emit(NotificationLoading());
-    currentPage = 1; // ريسيت للصفحات عند التحميل من جديد
+    currentPage = 1;
     final result = await repository.getNotifications(page: currentPage);
     result.fold((f) => emit(NotificationFailure(f.errmessage)), (data) {
       unreadCount = data.unreadCount;
@@ -89,7 +80,6 @@ class NotificationCubit extends Cubit<NotificationState> {
   Future<void> markAsRead(String id) async {
     final currentState = state;
     if (currentState is NotificationSuccess) {
-      // تحديث فوري في الذاكرة (UX)
       final newList = currentState.notifications
           .map((n) => n.id == id ? _markRead(n) : n)
           .toList();
@@ -115,7 +105,6 @@ class NotificationCubit extends Cubit<NotificationState> {
   Future<void> markAllAsRead() async {
     final currentState = state;
     if (currentState is NotificationSuccess) {
-      // تحديث فوري في الذاكرة (UX)
       final newList = currentState.notifications
           .map((n) => n.isRead ? n : _markRead(n))
           .toList();

@@ -1,7 +1,7 @@
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/user_registration_trend_entity.dart';
 
 class UserRegistrationTrendModel extends UserRegistrationTrendEntity {
-  UserRegistrationTrendModel({
+  const UserRegistrationTrendModel({
     required super.month,
     required super.patients,
     required super.doctors,

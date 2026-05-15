@@ -1,4 +1,3 @@
-// lib/features/support_tickets/data/models/support_stats_model.dart
 import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/entities/support_stats_entity.dart';
 
 class SupportStatsModel extends SupportStatsEntity {
@@ -21,7 +20,6 @@ class SupportStatsModel extends SupportStatsEntity {
       resolvedTickets: json['resolvedTickets'] ?? 0,
       closedTickets: json['closedTickets'] ?? 0,
       urgentTickets: json['urgentTickets'] ?? 0,
-      // تحويل الـ JSON Maps لـ Map<String, int> في دارت
       ticketsByCategory: Map<String, int>.from(json['ticketsByCategory'] ?? {}),
       ticketsByStatus: Map<String, int>.from(json['ticketsByStatus'] ?? {}),
     );

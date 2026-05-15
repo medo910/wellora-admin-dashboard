@@ -23,14 +23,12 @@ class ReviewModerationCubit extends Cubit<ReviewModerationState> {
     required this.restoreUseCase,
   }) : super(ReviewModerationInitial());
 
-  // 1. المخزن الداخلي للفلاتر (المسؤول عن ثبات الداتا)
   int _currentPage = 1;
   int? _doctorId, _userId;
   double? _minR, _maxR;
   String? _fromDate, _toDate;
   bool _isDeletedTab = false;
 
-  // 📥 الميثود الرئيسية لجلب الريفيوهات (بتدعم كل فلاتر Swagger)
   Future<void> fetchReviews({
     bool? isDeletedTab,
     int? page,
@@ -44,7 +42,6 @@ class ReviewModerationCubit extends Cubit<ReviewModerationState> {
   }) async {
     if (isRefresh) emit(ReviewLoading());
 
-    // تحديث المخزن الداخلي فقط إذا تم تمرير قيم جديدة
     if (isDeletedTab != null) _isDeletedTab = isDeletedTab;
     if (page != null) _currentPage = page;
     if (doctorId != null) _doctorId = doctorId;
@@ -94,93 +91,35 @@ class ReviewModerationCubit extends Cubit<ReviewModerationState> {
     );
   }
 
-  // 🛠️ أكشن المسح (Delete Review)
-  // Future<void> deleteReview(int reviewId, String reason) async {
-  //   final currentState = state;
-  //   emit(ReviewActionLoading());
-
-  //   final result = await deleteReviewUseCase(reviewId, reason);
-
-  //   result.fold((failure) => emit(ReviewActionFailure(failure.errmessage)), (
-  //     successMsg,
-  //   ) {
-  //     if (currentState is ReviewSuccess) {
-  //       // 🚀 In-memory update: شيل الريفيو من القائمة فوراً عشان الـ UI يكون سريع
-  //       final updatedList = currentState.reviews
-  //           .where((r) => r.reviewId != reviewId)
-  //           .toList();
-  //       emit(
-  //         currentState.copyWith(
-  //           reviews: updatedList,
-  //           totalCount: currentState.totalCount - 1,
-  //         ),
-  //       );
-  //     }
-  //     emit(ReviewActionSuccess(successMsg));
-  //   });
-  // }
-
   Future<void> deleteReview(int reviewId, String reason) async {
     final currentState = state;
     if (currentState is ReviewSuccess) {
-      // 1. بنقول للـ UI إن فيه أكشن شغال بس اللستة لسه موجودة
       emit(currentState.copyWith(isActionLoading: true));
 
       final result = await deleteReviewUseCase(reviewId, reason);
 
-      result.fold(
-        (failure) => emit(ReviewFailure(failure.errmessage)), // لو ايرور كبير
-        (successMsg) {
-          // 2. بنشيل الريفيو من اللستة في الذاكرة
-          final updatedList = currentState.reviews
-              .where((r) => r.reviewId != reviewId)
-              .toList();
+      result.fold((failure) => emit(ReviewFailure(failure.errmessage)), (
+        successMsg,
+      ) {
+        final updatedList = currentState.reviews
+            .where((r) => r.reviewId != reviewId)
+            .toList();
 
-          // 3. بنبعت الـ Success State الجديدة باللستة المحدثة ومعاها الرسالة
-          emit(
-            currentState.copyWith(
-              reviews: updatedList,
-              totalCount: currentState.totalCount - 1,
-              isActionLoading: false,
-              actionMessage: successMsg, // الـ Listener هيشوف دي ويطلع SnackBar
-            ),
-          );
-        },
-      );
+        emit(
+          currentState.copyWith(
+            reviews: updatedList,
+            totalCount: currentState.totalCount - 1,
+            isActionLoading: false,
+            actionMessage: successMsg,
+          ),
+        );
+      });
     }
   }
 
-  // 🛠️ أكشن الاستعادة (Restore Review)
-  // Future<void> restoreReview(int reviewId) async {
-  //   final currentState = state;
-  //   emit(ReviewActionLoading());
-
-  //   final result = await restoreUseCase(reviewId);
-
-  //   result.fold((failure) => emit(ReviewActionFailure(failure.errmessage)), (
-  //     successMsg,
-  //   ) {
-  //     if (currentState is ReviewSuccess) {
-  //       // 🚀 شيل الريفيو من لستة الـ Deleted
-  //       final updatedList = currentState.reviews
-  //           .where((r) => r.reviewId != reviewId)
-  //           .toList();
-  //       emit(
-  //         currentState.copyWith(
-  //           reviews: updatedList,
-  //           totalCount: currentState.totalCount - 1,
-  //         ),
-  //       );
-  //     }
-  //     emit(ReviewActionSuccess(successMsg));
-  //   });
-  // }
-
-  // 🛠️ أكشن الاستعادة (Restore Review) المطور
   Future<void> restoreReview(int reviewId) async {
     final currentState = state;
     if (currentState is ReviewSuccess) {
-      // 1. تفعيل حالة التحميل داخل الـ Success State نفسها
       emit(currentState.copyWith(isActionLoading: true));
 
       final result = await restoreUseCase(reviewId);
@@ -188,25 +127,22 @@ class ReviewModerationCubit extends Cubit<ReviewModerationState> {
       result.fold((failure) => emit(ReviewFailure(failure.errmessage)), (
         successMsg,
       ) {
-        // 2. تحديث اللستة في الذاكرة
         final updatedList = currentState.reviews
             .where((r) => r.reviewId != reviewId)
             .toList();
 
-        // 3. إرسال الحالة الجديدة بالرسالة واللستة المحدثة
         emit(
           currentState.copyWith(
             reviews: updatedList,
             totalCount: currentState.totalCount - 1,
             isActionLoading: false,
-            actionMessage: successMsg, // الـ Listener هيشوف دي ويطلع SnackBar
+            actionMessage: successMsg,
           ),
         );
       });
     }
   }
 
-  // 🧹 تصفير كل شيء
   void resetFilters() {
     _doctorId = _userId = _minR = _maxR = _fromDate = _toDate = null;
     _currentPage = 1;

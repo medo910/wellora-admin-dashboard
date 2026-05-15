@@ -14,8 +14,8 @@ class AdminSidebar extends StatelessWidget {
       builder: (context, state) {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 300),
-          width: state.isCollapsed ? 80 : 260, // الـ Width حسب الحالة
-          color: const Color(0xFF0F172A), // لون الـ Sidebar من v0.dev
+          width: state.isCollapsed ? 80 : 260,
+          color: const Color(0xFF0F172A),
           child: Column(
             children: [
               _buildLogo(state.isCollapsed),
@@ -23,21 +23,10 @@ class AdminSidebar extends StatelessWidget {
               Expanded(
                 child: ListView.builder(
                   itemCount: adminNavItems.length,
-                  // itemBuilder: (context, index) => _SidebarTile(
-                  //   item: adminNavItems[index],
-                  //   isActive: state.selectedIndex == index,
-                  //   isCollapsed: state.isCollapsed,
-                  //   onTap: () {
-                  //     context.read<SidebarCubit>().selectItem(index);
-                  //     context.go(
-                  //       adminNavItems[index].route,
-                  //     ); // استخدام GoRouter للتنقل
-                  //   },
-                  // ),
+
                   itemBuilder: (context, index) {
                     final item = adminNavItems[index];
 
-                    // 💡 بنعرف الصفحة الحالية من الـ GoRouter
                     final String currentLocation = GoRouterState.of(
                       context,
                     ).matchedLocation;
@@ -45,8 +34,7 @@ class AdminSidebar extends StatelessWidget {
 
                     return _SidebarTile(
                       item: item,
-                      isActive:
-                          isPathActive, // بنبعت الحالة بناءً على المسار الحقيقي
+                      isActive: isPathActive,
                       isCollapsed: state.isCollapsed,
                       onTap: () {
                         context.read<SidebarCubit>().selectItem(index);
@@ -76,11 +64,7 @@ class AdminSidebar extends StatelessWidget {
             ? MainAxisAlignment.center
             : MainAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.favorite,
-            color: Color(0xFF008080),
-            size: 30,
-          ), // شعار Wellora
+          const Icon(Icons.favorite, color: Color(0xFF008080), size: 30),
           if (!isCollapsed) ...[
             const SizedBox(width: 12),
             const Text(
@@ -125,7 +109,6 @@ class AdminSidebar extends StatelessWidget {
   }
 }
 
-// ويدجيت العنصر الواحد (Tile) - Extract Widget لتقليل حجم الملف
 class _SidebarTile extends StatelessWidget {
   final NavItemModel item;
   final bool isActive;
@@ -151,9 +134,7 @@ class _SidebarTile extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
-              color: isActive
-                  ? const Color(0xFF008080)
-                  : Colors.transparent, // اللون لما يكون Active
+              color: isActive ? const Color(0xFF008080) : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(

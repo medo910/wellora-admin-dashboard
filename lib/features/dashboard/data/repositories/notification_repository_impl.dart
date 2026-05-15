@@ -1,4 +1,3 @@
-// features/dashboard/data/repositories/notification_repository_impl.dart
 import 'package:admin_dashboard_graduation_project/core/errors/failures.dart';
 import 'package:admin_dashboard_graduation_project/core/network/api_service.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/notification_entity.dart';
@@ -7,7 +6,7 @@ import 'package:admin_dashboard_graduation_project/features/dashboard/domain/rep
 import 'package:dartz/dartz.dart';
 
 class NotificationRepositoryImpl implements NotificationRepository {
-  final ApiService apiService; // الـ Dio Helper بتاعك
+  final ApiService apiService;
   NotificationRepositoryImpl(this.apiService);
 
   @override

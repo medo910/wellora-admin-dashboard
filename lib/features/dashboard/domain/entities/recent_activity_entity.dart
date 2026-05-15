@@ -1,5 +1,3 @@
-// lib/features/dashboard/domain/entities/recent_activity_entity.dart
-
 class ActionEntity {
   final String adminName;
   final String actionType;

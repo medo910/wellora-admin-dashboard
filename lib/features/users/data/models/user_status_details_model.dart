@@ -1,4 +1,3 @@
-// lib/features/users/data/models/user_status_details_model.dart
 import '../../domain/entities/user_status_details_entity.dart';
 
 class UserStatusDetailsModel extends UserStatusDetailsEntity {

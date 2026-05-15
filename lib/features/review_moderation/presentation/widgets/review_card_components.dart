@@ -1,5 +1,3 @@
-// presentation/widgets/review_card_components.dart
-
 import 'package:admin_dashboard_graduation_project/features/review_moderation/domain/entities/review_entity.dart';
 import 'package:flutter/material.dart';
 

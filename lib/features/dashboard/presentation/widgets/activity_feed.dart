@@ -1,10 +1,10 @@
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/recent_activity_entity.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
-import 'package:intl/intl.dart'; // لتحسين عرض الوقت
+import 'package:intl/intl.dart';
 
 class ActivityFeed extends StatelessWidget {
-  final List<ActionEntity> actions; // استقبال قائمة الحركات الحقيقية
+  final List<ActionEntity> actions;
 
   const ActivityFeed({super.key, required this.actions});
 
@@ -34,7 +34,6 @@ class ActivityFeed extends StatelessWidget {
             ),
           ),
 
-          // في حالة عدم وجود بيانات
           if (actions.isEmpty)
             const Padding(
               padding: EdgeInsets.all(20),
@@ -61,7 +60,6 @@ class ActivityFeed extends StatelessWidget {
   }
 
   Widget _buildActivityItem(ActionEntity action) {
-    // تحديد الأيقونة واللون بناءً على نوع الحركة (Logic Mapping)
     final bool isPositive =
         action.actionType.contains("Approve") ||
         action.actionType.contains("Unblock");
@@ -106,9 +104,7 @@ class ActivityFeed extends StatelessWidget {
     );
   }
 
-  // ميثود مساعدة لتنظيف مسميات الأكشنز (مثلاً CloseTicket -> Ticket Closed)
   String _formatActionTitle(String type, String target) {
-    // بنستخدم replaceAllMapped عشان نقدر نفصل الكلمات اللي لازقة في بعض
     String formattedType = type.replaceAllMapped(
       RegExp(r'([a-z])([A-Z])'),
       (Match m) => '${m[1]} ${m[2]}',
@@ -117,7 +113,6 @@ class ActivityFeed extends StatelessWidget {
     return "$target $formattedType";
   }
 
-  // ميثود مساعدة لحساب الوقت المنقضي
   String _formatTimestamp(DateTime time) {
     final diff = DateTime.now().difference(time);
     if (diff.inMinutes < 60) return "${diff.inMinutes} mins ago";

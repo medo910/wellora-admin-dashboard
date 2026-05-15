@@ -1,11 +1,9 @@
 // lib/features/dashboard/presentation/widgets/registration_trends_chart.dart
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/user_registration_trend_entity.dart';
-import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/user_stats_entity.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class RegistrationTrendsChart extends StatelessWidget {
-  // final UserStatsEntity userStats; // استقبال إحصائيات المستخدمين
   final List<UserRegistrationTrendEntity> trends;
   const RegistrationTrendsChart({super.key, required this.trends});
 
@@ -15,7 +13,6 @@ class RegistrationTrendsChart extends StatelessWidget {
       return FlSpot(e.key.toDouble(), e.value.doctors.toDouble());
     }).toList();
 
-    // 2. تحويل داتا المرضى لنقط
     List<FlSpot> patientSpots = trends.asMap().entries.map((e) {
       return FlSpot(e.key.toDouble(), e.value.patients.toDouble());
     }).toList();
@@ -39,44 +36,12 @@ class RegistrationTrendsChart extends StatelessWidget {
               height: 300,
               child: LineChart(
                 LineChartData(
-                  // نظبط الـ Y-axis ليكون أعلى من إجمالي الدكاترة بشوية
                   minY: 0,
                   maxY: 60,
-                  gridData: FlGridData(
-                    show: true,
-                    drawVerticalLine: false,
-                    // getDrawingHorizontalLine: (value) =>
-                    //     FlLine(color: Colors.grey.shade100, strokeWidth: 1),
-                  ),
+                  gridData: FlGridData(show: true, drawVerticalLine: false),
                   titlesData: _buildTitlesData(trends),
                   borderData: FlBorderData(show: false),
                   lineBarsData: [
-                    // خط المرضى (Patients) - الإجمالي 6
-                    // _buildLineBarData(
-                    //   spots: [
-                    //     const FlSpot(0, 1),
-                    //     const FlSpot(2, 3),
-                    //     const FlSpot(4, 2),
-                    //     FlSpot(
-                    //       6,
-                    //       userStats.totalPatients.toDouble(),
-                    //     ), // القيمة الحقيقية
-                    //   ],
-                    //   color: const Color(0xFF008080),
-                    // ),
-                    // // خط الدكاترة (Doctors) - الإجمالي 21
-                    // _buildLineBarData(
-                    //   spots: [
-                    //     const FlSpot(0, 5),
-                    //     const FlSpot(2, 12),
-                    //     const FlSpot(4, 15),
-                    //     FlSpot(
-                    //       6,
-                    //       userStats.totalDoctors.toDouble(),
-                    //     ), // القيمة الحقيقية
-                    //   ],
-                    //   color: const Color(0xFF10B981),
-                    // ),
                     _buildLineBarData(
                       spots: patientSpots,
                       color: const Color(0xFF008080),
@@ -89,7 +54,6 @@ class RegistrationTrendsChart extends StatelessWidget {
                 ),
               ),
             ),
-            // Legend (مفتاح الرسم البياني)
             const SizedBox(height: 16),
             _buildLegend(),
           ],
@@ -98,7 +62,6 @@ class RegistrationTrendsChart extends StatelessWidget {
     );
   }
 
-  // ميثود لبناء مفتاح الرسم البياني عشان نعرف مين مريض ومين دكتور
   Widget _buildLegend() {
     return Row(
       children: [
@@ -144,55 +107,6 @@ class RegistrationTrendsChart extends StatelessWidget {
     );
   }
 
-  // FlTitlesData _buildTitlesData() {
-  //   return FlTitlesData(
-  //     rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-  //     topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-  //     bottomTitles: AxisTitles(
-  //       sideTitles: SideTitles(
-  //         showTitles: true,
-  //         getTitlesWidget: (value, meta) {
-  //           const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'];
-  //           if (value.toInt() < months.length) {
-  //             return Padding(
-  //               padding: const EdgeInsets.only(top: 10),
-  //               child: Text(
-  //                 months[value.toInt()],
-  //                 style: const TextStyle(color: Colors.grey, fontSize: 12),
-  //               ),
-  //             );
-  //           }
-  //           return const SizedBox();
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
-  // FlTitlesData _buildTitlesData(List<UserRegistrationTrendEntity> trends) {
-  //   return FlTitlesData(
-  //     rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-  //     topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-  //     bottomTitles: AxisTitles(
-  //       sideTitles: SideTitles(
-  //         showTitles: true,
-  //         getTitlesWidget: (value, meta) {
-  //           int index = value.toInt();
-  //           if (index >= 0 && index < trends.length) {
-  //             // عرض الشهر الحقيقي (مثلاً Apr 2026)
-  //             return Padding(
-  //               padding: const EdgeInsets.only(top: 10),
-  //               child: Text(
-  //                 trends[index].month.split(' ')[0], // هناخد أول كلمة (Apr)
-  //                 style: const TextStyle(color: Colors.grey, fontSize: 10),
-  //               ),
-  //             );
-  //           }
-  //           return const SizedBox();
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
   FlTitlesData _buildTitlesData(List<UserRegistrationTrendEntity> trends) {
     return FlTitlesData(
       rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -200,22 +114,18 @@ class RegistrationTrendsChart extends StatelessWidget {
       bottomTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
-          // 🚀 السطر ده هو "كلمة السر"
           interval: 1,
-          // عشان نضمن إن الكلام ميبقاش مخنوق
           reservedSize: 30,
           getTitlesWidget: (value, meta) {
             int index = value.toInt();
 
-            // تأكد إننا بنرسم عند القيم الصحيحة بالظبط (0.0, 1.0, 2.0 ...)
-            // وتأكد إن الـ index موجود فعلاً في القائمة
             if (value == index.toDouble() &&
                 index >= 0 &&
                 index < trends.length) {
               return Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Text(
-                  trends[index].month.split(' ')[0], // هياخد Jan, Feb...
+                  trends[index].month.split(' ')[0],
                   style: const TextStyle(
                     color: Color(0xFF64748B),
                     fontSize: 10,

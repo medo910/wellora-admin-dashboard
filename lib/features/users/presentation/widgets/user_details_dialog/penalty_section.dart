@@ -1,5 +1,3 @@
-// lib/features/users/presentation/widgets/user_details_dialog/widgets/penalty_section.dart
-
 import 'package:flutter/material.dart';
 import '../../../domain/entities/user_entity.dart';
 import '../../../domain/entities/user_status_details_entity.dart';

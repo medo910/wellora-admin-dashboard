@@ -1,7 +1,7 @@
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/doctor_stats_entity.dart';
 
 class DoctorStatsModel extends DoctorStatsEntity {
-  DoctorStatsModel({
+  const DoctorStatsModel({
     required super.totalDoctors,
     required super.verifiedDoctors,
     required super.pendingVerification,
@@ -9,7 +9,7 @@ class DoctorStatsModel extends DoctorStatsEntity {
     required super.averageRating,
     // required super.totalReviews,
     required super.percentageChange,
-    required super.lastSevenDaysTrend, // 🚀 الجديد
+    required super.lastSevenDaysTrend,
   });
 
   factory DoctorStatsModel.fromJson(Map<String, dynamic> json) {

@@ -1,86 +1,3 @@
-// // lib/features/dashboard/data/models/dashboard_overview_model.dart
-// class DashboardOverviewModel {
-//   final UserStatistics userStats;
-//   final DoctorStatistics doctorStats;
-//   final TicketStatistics ticketStats;
-
-//   DashboardOverviewModel({
-//     required this.userStats,
-//     required this.doctorStats,
-//     required this.ticketStats,
-//   });
-
-//   factory DashboardOverviewModel.fromJson(Map<String, dynamic> json) {
-//     return DashboardOverviewModel(
-//       userStats: UserStatistics.fromJson(json['userStatistics']),
-//       doctorStats: DoctorStatistics.fromJson(json['doctorStatistics']),
-//       ticketStats: TicketStatistics.fromJson(json['ticketStatistics']),
-//     );
-//   }
-// }
-
-// class UserStatistics {
-//   final int totalUsers;
-//   final int activeUsers;
-//   final double growth; // مش موجودة صريحة بس هنحسبها أو نثبتها مبدئياً
-
-//   UserStatistics({
-//     required this.totalUsers,
-//     required this.activeUsers,
-//     required this.growth,
-//   });
-
-//   factory UserStatistics.fromJson(Map<String, dynamic> json) {
-//     return UserStatistics(
-//       totalUsers: json['totalUsers'] ?? 0,
-//       activeUsers: json['activeUsers'] ?? 0,
-//       growth: 12.5, // قيمة تجريبية بناءً على الديزاين
-//     );
-//   }
-// }
-// // ... كمل باقي الـ Stats بنفس النمط بناءً على الـ Swagger
-
-// class DoctorStatistics {
-//   final int totalDoctors;
-//   final int activeDoctors;
-//   final double growth;
-
-//   DoctorStatistics({
-//     required this.totalDoctors,
-//     required this.activeDoctors,
-//     required this.growth,
-//   });
-
-//   factory DoctorStatistics.fromJson(Map<String, dynamic> json) {
-//     return DoctorStatistics(
-//       totalDoctors: json['totalDoctors'] ?? 0,
-//       activeDoctors: json['activeDoctors'] ?? 0,
-//       growth: 8.3, // قيمة تجريبية
-//     );
-//   }
-// }
-
-// class TicketStatistics {
-//   final int totalTickets;
-//   final int openTickets;
-//   final double growth;
-
-//   TicketStatistics({
-//     required this.totalTickets,
-//     required this.openTickets,
-//     required this.growth,
-//   });
-
-//   factory TicketStatistics.fromJson(Map<String, dynamic> json) {
-//     return TicketStatistics(
-//       totalTickets: json['totalTickets'] ?? 0,
-//       openTickets: json['openTickets'] ?? 0,
-//       growth: -5.2, // قيمة تجريبية
-//     );
-//   }
-// }
-
-// lib/features/dashboard/data/models/dashboard_overview_model.dart
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/dashboard_overview_entity.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/user_registration_trend_entity.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/models/doctor_stats_model.dart';
@@ -92,7 +9,7 @@ import 'package:admin_dashboard_graduation_project/features/dashboard/domain/mod
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/models/verification_stats_model.dart';
 
 class DashboardOverviewModel extends DashboardOverviewEntity {
-  DashboardOverviewModel({
+  const DashboardOverviewModel({
     required super.userStats,
     required super.doctorStats,
     required super.ticketStats,
@@ -116,12 +33,10 @@ class DashboardOverviewModel extends DashboardOverviewEntity {
       recentTickets: (json['recentActivity']['recentTickets'] as List)
           .map((i) => RecentTicketModel.fromJson(i))
           .toList(),
-      userRegistrationTrend:
-          (json['userRegistrationTrends'] as List? ??
-                  []) // 🚀 تأكد من حرف الـ s في الأخر
-              .map((i) => UserRegistrationTrendModel.fromJson(i))
-              .toList()
-              .cast<UserRegistrationTrendEntity>(),
+      userRegistrationTrend: (json['userRegistrationTrends'] as List? ?? [])
+          .map((i) => UserRegistrationTrendModel.fromJson(i))
+          .toList()
+          .cast<UserRegistrationTrendEntity>(),
     );
   }
 }

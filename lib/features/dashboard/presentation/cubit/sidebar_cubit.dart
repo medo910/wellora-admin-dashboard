@@ -1,4 +1,3 @@
-// lib/features/dashboard/presentation/cubit/sidebar_cubit.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SidebarState {

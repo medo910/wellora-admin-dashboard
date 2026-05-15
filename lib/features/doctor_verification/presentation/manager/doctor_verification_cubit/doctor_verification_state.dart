@@ -10,9 +10,9 @@ class DoctorVerificationLoading extends DoctorVerificationState {}
 class DoctorVerificationSuccess extends DoctorVerificationState {
   final List<DoctorVerificationEntity> verifications;
   final VerificationStatsEntity stats;
-  final int page; // الصفحة الحالية
-  final bool hasNextPage; // هل فيه صفحة تانية؟
-  final int totalItems; // إجمالي عدد العناصر (لأغراض الإحصائيات)
+  final int page;
+  final bool hasNextPage;
+  final int totalItems;
   final String? currentStatus;
 
   DoctorVerificationSuccess({
@@ -30,7 +30,6 @@ class DoctorVerificationFailure extends DoctorVerificationState {
   DoctorVerificationFailure(this.errMessage);
 }
 
-// حالات خاصة بالأكشنز (Approve/Reject) عشان مانعملش Reload للصفحة كلها
 class VerificationActionLoading extends DoctorVerificationState {}
 
 class VerificationActionSuccess extends DoctorVerificationState {

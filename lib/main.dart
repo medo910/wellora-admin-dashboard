@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
-  // ضروري لضمان تهيئة الـ Plugins قبل الـ Injection [cite: 284]
   WidgetsFlutterBinding.ensureInitialized();
 
-  // تهيئة الـ GetIt
   await init();
 
   runApp(const MyApp());
@@ -30,7 +28,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primaryColor: const Color(0xFF008080),
             scaffoldBackgroundColor: const Color(0xFFF8FAFC),
-            fontFamily: 'Roboto', // [cite: 60]
+            fontFamily: 'Roboto',
           ),
         );
       },

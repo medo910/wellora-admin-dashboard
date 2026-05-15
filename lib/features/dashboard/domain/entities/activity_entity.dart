@@ -1,4 +1,3 @@
-// lib/features/dashboard/domain/entities/activity_entity.dart
 enum ActivityType {
   userRegistered,
   doctorVerified,

@@ -1,4 +1,3 @@
-// lib/features/support_tickets/domain/entities/support_ticket_entity.dart
 class SupportTicketEntity {
   final String id;
   final int userId;
@@ -61,8 +60,7 @@ class SupportTicketEntity {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       closedAt: closedAt ?? this.closedAt,
-      closedByAdminName:
-          closedByAdminName ?? this.closedByAdminName, // ممكن تكون null
+      closedByAdminName: closedByAdminName ?? this.closedByAdminName,
       messageCount: messageCount ?? this.messageCount,
     );
   }

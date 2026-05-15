@@ -1,4 +1,3 @@
-// widgets/message_bubble.dart
 import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/entities/ticket_message_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +9,7 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isMe = message.isFromAdmin; // بنعرف من الـ Entity
+    bool isMe = message.isFromAdmin;
 
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,

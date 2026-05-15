@@ -1,5 +1,3 @@
-// lib/features/users/data/models/user_model.dart
-
 import 'package:admin_dashboard_graduation_project/features/users/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {

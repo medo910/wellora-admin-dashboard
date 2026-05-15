@@ -1,4 +1,3 @@
-// features/review_moderation/data/models/review_model.dart
 import 'package:admin_dashboard_graduation_project/features/review_moderation/domain/entities/review_entity.dart';
 
 class ReviewModel extends ReviewEntity {

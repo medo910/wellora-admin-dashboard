@@ -1,5 +1,3 @@
-// presentation/widgets/review_filter_sheet.dart
-
 import 'package:admin_dashboard_graduation_project/features/review_moderation/presentation/manager/review_moderation_cubit/review_moderation_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +6,7 @@ class ReviewFilterSheet extends StatefulWidget {
   final double? initialMinR;
   final double? initialMaxR;
   final DateTimeRange? initialDateRange;
-  final int? initialDoctorId; // 🚀 أضفنا دول للـ Constructor
+  final int? initialDoctorId;
   final int? initialUserId;
 
   const ReviewFilterSheet({
@@ -27,7 +25,6 @@ class ReviewFilterSheet extends StatefulWidget {
 class _ReviewFilterSheetState extends State<ReviewFilterSheet> {
   late RangeValues _ratingValues;
   DateTimeRange? _selectedDateRange;
-  // 🚀 إضافة Controllers للـ IDs
   // final _docIdController = TextEditingController();
   // final _userIdController = TextEditingController();
   late TextEditingController _docIdController;
@@ -40,7 +37,6 @@ class _ReviewFilterSheetState extends State<ReviewFilterSheet> {
       widget.initialMaxR ?? 5.0,
     );
     _selectedDateRange = widget.initialDateRange;
-    // 🚀 تهيئة الـ TextFields بقيم الـ IDs إذا كانت موجود  ة
     // _docIdController.text = widget.initialDoctorId?.toString() ?? '';
     // _userIdController.text = widget.initialUserId?.toString() ?? '';
     _docIdController = TextEditingController(
@@ -100,7 +96,6 @@ class _ReviewFilterSheetState extends State<ReviewFilterSheet> {
 
             const SizedBox(height: 16),
 
-            // 📅 Date Range
             ListTile(
               leading: const Icon(Icons.calendar_today, color: Colors.teal),
               title: Text(
@@ -125,7 +120,7 @@ class _ReviewFilterSheetState extends State<ReviewFilterSheet> {
                   child: OutlinedButton(
                     onPressed: () {
                       context.read<ReviewModerationCubit>().resetFilters();
-                      Navigator.pop(context); // 🚀 قفل الدايلوج بعد الـ Reset
+                      Navigator.pop(context);
                     },
                     child: const Text("Reset All"),
                   ),

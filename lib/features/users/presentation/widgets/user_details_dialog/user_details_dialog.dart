@@ -1,5 +1,3 @@
-// lib/features/users/presentation/widgets/user_details_dialog/user_details_dialog.dart
-
 import 'package:admin_dashboard_graduation_project/features/users/domain/entities/user_entity.dart';
 import 'package:admin_dashboard_graduation_project/features/users/domain/entities/user_status_details_entity.dart';
 import 'package:admin_dashboard_graduation_project/features/users/presentation/manager/cubit/users_cubit.dart';
@@ -23,8 +21,6 @@ Widget _buildCloseButton(BuildContext context) {
   );
 }
 
-// lib/features/users/presentation/widgets/user_details_dialog/user_details_dialog.dart
-
 void showUserDetailsDialog(BuildContext context, UserEntity user) {
   final usersCubit = context.read<UsersCubit>();
 
@@ -34,15 +30,12 @@ void showUserDetailsDialog(BuildContext context, UserEntity user) {
       value: usersCubit,
       child: Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: _UserDetailsDialogBody(
-          user: user,
-        ), // حولنا المحتوى لـ Widget منفصلة تحت
+        child: _UserDetailsDialogBody(user: user),
       ),
     ),
   );
 }
 
-// 💡 حولنا ده لـ StatefulWidget عشان الـ ScrollController
 class _UserDetailsDialogBody extends StatefulWidget {
   final UserEntity user;
   const _UserDetailsDialogBody({required this.user});
@@ -52,12 +45,10 @@ class _UserDetailsDialogBody extends StatefulWidget {
 }
 
 class _UserDetailsDialogBodyState extends State<_UserDetailsDialogBody> {
-  // 1. تعريف الـ Controller
   final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
-    // 2. مسحه من الذاكرة لما الدايلوج يقفل
     _scrollController.dispose();
     super.dispose();
   }
@@ -71,11 +62,10 @@ class _UserDetailsDialogBodyState extends State<_UserDetailsDialogBody> {
         future: context.read<UsersCubit>().fetchUserStatus(widget.user.userId),
         builder: (context, snapshot) {
           return Scrollbar(
-            // 💡 ضفنا Scrollbar صريح
-            controller: _scrollController, // ربطناه بالـ Controller
-            thumbVisibility: true, // اختياري: خليه ظاهر دايماً في الويب
+            controller: _scrollController,
+            thumbVisibility: true,
             child: SingleChildScrollView(
-              controller: _scrollController, // 3. لازم نربطه هنا كمان
+              controller: _scrollController,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,

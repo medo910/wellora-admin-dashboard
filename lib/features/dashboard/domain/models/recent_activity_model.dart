@@ -1,5 +1,3 @@
-// lib/features/dashboard/data/models/recent_activity_model.dart
-
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/recent_activity_entity.dart';
 
 class ActionModel extends ActionEntity {

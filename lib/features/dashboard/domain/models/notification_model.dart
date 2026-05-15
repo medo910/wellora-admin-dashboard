@@ -1,6 +1,5 @@
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/notification_entity.dart';
 
-// features/dashboard/data/models/notification_model.dart
 class NotificationModel extends NotificationEntity {
   const NotificationModel({
     required super.id,
@@ -22,7 +21,7 @@ class NotificationModel extends NotificationEntity {
       title: json['title'],
       message: json['message'],
       // type: json['type'],
-      type: mappedType, // 🚀 كدة الـ UI هيفهمها عادي
+      type: mappedType,
       isRead: json['isRead'],
       createdAt: DateTime.parse(json['createdAt']),
       relatedEntityType: json['relatedEntityType'],

@@ -1,4 +1,3 @@
-// lib/features/support_tickets/domain/entities/support_stats_entity.dart
 class SupportStatsEntity {
   final int totalTickets;
   final int openTickets;

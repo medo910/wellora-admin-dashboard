@@ -1,92 +1,3 @@
-// import 'package:admin_dashboard_graduation_project/core/di/secure_storage_helper.dart';
-// import 'package:admin_dashboard_graduation_project/core/errors/failures.dart';
-// import 'package:admin_dashboard_graduation_project/features/auth/data/data_sources/auth_remote_data_source.dart';
-// import 'package:admin_dashboard_graduation_project/features/auth/domain/entities/auth_entity.dart';
-// import 'package:admin_dashboard_graduation_project/features/auth/domain/models/auth_token_model.dart';
-// import 'package:admin_dashboard_graduation_project/features/auth/domain/repos/auth_repo.dart';
-// import 'package:dartz/dartz.dart';
-// import 'package:dio/dio.dart';
-
-// class AuthRepoImpl implements AuthRepository {
-//   // lib/features/auth/data/repositories/auth_repository_impl.dart
-//   final AuthRemoteDataSource remoteDataSource;
-
-//   AuthRepoImpl(this.remoteDataSource);
-//   @override
-//   Future<Either<Failure, LoginResultEntity>> login({
-//     required String email,
-//     required String password,
-//     String? otpCode,
-//   }) async {
-//     try {
-//       final response = await remoteDataSource.login(
-//         email: email,
-//         password: password,
-//         otpCode: otpCode ?? "",
-//       );
-
-//       if (response['isSuccess'] == true) {
-//         // بناءً على ستاندرد الباك إند [cite: 114]
-//         // الحالة 1: الـ OTP لسه متبعتش (النداء الأول)
-//         if (otpCode == null || otpCode.isEmpty) {
-//           return Right(
-//             LoginOtpRequiredEntity(
-//               mfaToken: response['data']['mfaToken'] ?? "",
-//               message: response['data']['message'] ?? "OTP Sent",
-//             ),
-//           );
-//         }
-//         // الحالة 2: الـ OTP موجود وبنفك التوكن (النداء الثاني) [cite: 81, 87]
-//         else {
-//           final tokenModel = AuthTokenModel.fromJson(response);
-//           Map<String, dynamic> payload = JwtDecoder.decode(
-//             tokenModel.accessToken,
-//           );
-//           String role = (payload['Role'] ?? payload['role'] ?? '')
-//               .toString()
-//               .toLowerCase();
-
-//           // فحص الـ Admin Role [cite: 87, 88]
-//           if (role != 'admin') {
-//             return Left(
-//               ServerFailure("Access Denied: Admin privileges required."),
-//             );
-//           }
-
-//           // حفظ التوكنز والبيانات [cite: 90, 97]
-//           await SecureStorageHelper.saveFullUserData(
-//             accessToken: tokenModel.accessToken,
-//             refreshToken: tokenModel.refreshToken,
-//             role: role,
-//             userId: (payload['UserID'] ?? '').toString(),
-//             name: (payload['Name'] ?? '').toString(),
-//             email: (payload['Email'] ?? '').toString(),
-//             jti: (payload['jti'] ?? '').toString(),
-//           );
-
-//           return Right(
-//             LoginSuccessEntity(
-//               user: AuthEntity(
-//                 id: (payload['UserID'] ?? '').toString(),
-//                 name: (payload['Name'] ?? '').toString(),
-//                 email: (payload['Email'] ?? '').toString(),
-//                 role: role,
-//               ),
-//             ),
-//           );
-//         }
-//       } else {
-//         return Left(
-//           ServerFailure(response['error'] ?? "Login failed"),
-//         ); // [cite: 122]
-//       }
-//     } on DioException catch (e) {
-//       return Left(ServerFailure.fromDioException(e)); // [cite: 124]
-//     }
-//   }
-// }
-
-// lib/features/auth/data/repositories/auth_repository_impl.dart
 import 'dart:developer';
 
 import 'package:admin_dashboard_graduation_project/core/di/secure_storage_helper.dart';
@@ -113,18 +24,15 @@ class AuthRepositoryImpl implements AuthRepository {
     String? otpCode,
   }) async {
     try {
-      // 1. تنفيذ نداء الـ API
       final response = await remoteDataSource.login(
         email: email,
         password: password,
         otpCode: otpCode ?? "",
       );
 
-      // 2. تحويل الـ JSON لموديل الاستجابة المنظم
       final loginModel = LoginResponseModel.fromJson(response);
 
       if (loginModel.isSuccess) {
-        // --- الحالة الأولى: النداء الأول (بدون OTP) --- [cite: 80, 111]
         if (otpCode == null || otpCode.isEmpty) {
           return Right(
             LoginOtpRequiredEntity(
@@ -132,12 +40,9 @@ class AuthRepositoryImpl implements AuthRepository {
               message: loginModel.message ?? "OTP sent to your email.",
             ),
           );
-        }
-        // --- الحالة الثانية: النداء الثاني (مع OTP) --- [cite: 81, 112]
-        else {
+        } else {
           final tokenModel = loginModel.tokens!;
 
-          // أ. فك التشفير من الـ JWT للتأكد من الصلاحيات [cite: 87, 101]
           Map<String, dynamic> payload = JwtDecoder.decode(
             tokenModel.accessToken,
           );
@@ -145,7 +50,6 @@ class AuthRepositoryImpl implements AuthRepository {
               .toString()
               .toLowerCase();
 
-          // ب. التحقق من صلاحية الأدمن [cite: 82, 88]
           if (role != 'admin') {
             return Left(
               ServerFailure(
@@ -154,7 +58,6 @@ class AuthRepositoryImpl implements AuthRepository {
             );
           }
 
-          // ج. حفظ البيانات في الـ Secure Storage [cite: 90, 96]
           await SecureStorageHelper.saveFullUserData(
             accessToken: tokenModel.accessToken,
             refreshToken: tokenModel.refreshToken,
@@ -165,7 +68,6 @@ class AuthRepositoryImpl implements AuthRepository {
             email: (payload['Email'] ?? payload['email'] ?? '').toString(),
           );
 
-          // د. إرجاع كيان النجاح للـ UI
           return Right(
             LoginSuccessEntity(
               user: AuthEntity(

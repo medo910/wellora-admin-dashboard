@@ -1,5 +1,3 @@
-// lib/features/users/presentation/widgets/user_pagination_bar.dart
-
 import 'package:flutter/material.dart';
 
 class UserPaginationBar extends StatelessWidget {

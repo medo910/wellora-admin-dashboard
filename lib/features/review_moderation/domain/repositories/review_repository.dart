@@ -1,4 +1,3 @@
-// features/review_moderation/domain/repositories/review_repository.dart
 import 'package:admin_dashboard_graduation_project/core/errors/failures.dart';
 import 'package:admin_dashboard_graduation_project/features/review_moderation/domain/entities/review_entity.dart';
 import 'package:dartz/dartz.dart';
@@ -7,7 +6,7 @@ abstract class ReviewRepository {
   Future<Either<Failure, ReviewsPaginatedEntity>> getReviews({
     int page = 1,
     int pageSize = 10,
-    int? doctorId, // 🚀 أضفنا ده
+    int? doctorId,
     int? userId,
     double? minRating,
     double? maxRating,

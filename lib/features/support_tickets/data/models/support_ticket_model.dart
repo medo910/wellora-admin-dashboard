@@ -1,4 +1,3 @@
-// lib/features/support_tickets/data/models/support_ticket_model.dart
 import 'package:admin_dashboard_graduation_project/features/support_tickets/domain/entities/support_ticket_entity.dart';
 
 class SupportTicketModel extends SupportTicketEntity {

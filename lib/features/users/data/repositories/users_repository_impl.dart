@@ -1,5 +1,3 @@
-// lib/features/users/data/repositories/users_repository_impl.dart
-
 import 'package:admin_dashboard_graduation_project/features/users/domain/entities/user_status_details_entity.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
@@ -27,7 +25,6 @@ class UsersRepositoryImpl implements UsersRepository {
       );
       return Right(result);
     } catch (e) {
-      // هنا بنستخدم ServerFailure اللي إنت أكيد عامله في الـ core
       if (e is DioException) {
         return Left(ServerFailure.fromDioException(e));
       }
@@ -89,13 +86,12 @@ class UsersRepositoryImpl implements UsersRepository {
     }
   }
 
-  // ميثود مساعدة (Generic) عشان مكررش كود الـ try-catch في كل أكشن
   Future<Either<Failure, Unit>> _handleAction(
     Future<void> Function() action,
   ) async {
     try {
       await action();
-      return const Right(unit); // unit دي يعني "تمام مفيش داتا محتاجة ترجع"
+      return const Right(unit);
     } catch (e) {
       if (e is DioException) {
         return Left(ServerFailure.fromDioException(e));

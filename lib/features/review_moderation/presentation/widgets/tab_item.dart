@@ -1,5 +1,3 @@
-// presentation/widgets/tab_item.dart
-
 import 'package:flutter/material.dart';
 
 class TabItem extends StatelessWidget {

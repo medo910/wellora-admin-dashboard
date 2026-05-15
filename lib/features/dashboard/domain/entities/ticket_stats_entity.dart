@@ -1,25 +1,3 @@
-// class TicketStatsEntity {
-//   final int totalTickets;
-//   final int openTickets;
-//   final int closedTickets;
-//   final int urgentTickets;
-//   final Map<String, int> ticketsByCategory;
-//   final double percentageChange;
-//   final List<int> lastSevenDaysTrend;
-//   final int resolvedTickets;
-
-//   TicketStatsEntity({
-//     required this.totalTickets,
-//     required this.openTickets,
-//     required this.closedTickets,
-//     required this.urgentTickets,
-//     required this.ticketsByCategory,
-//     required this.percentageChange,
-//     required this.lastSevenDaysTrend,
-//     required this.resolvedTickets,
-//   });
-// }
-
 import 'package:equatable/equatable.dart';
 
 class TicketStatsEntity extends Equatable {

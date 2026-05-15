@@ -1,5 +1,3 @@
-// lib/features/doctor_verification/presentation/widgets/verification_stats_bar.dart
-
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/domain/entities/verification_stats_entity.dart';
 import 'package:flutter/material.dart';
 

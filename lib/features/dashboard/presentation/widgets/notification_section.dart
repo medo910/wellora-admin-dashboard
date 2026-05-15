@@ -1,8 +1,7 @@
-// lib/features/dashboard/presentation/widgets/notification_section.dart
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/cubit/notification_cubit/notification_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'notification_item.dart'; // import الـ Item اللي لسه عاملينه
+import 'notification_item.dart';
 
 class NotificationSection extends StatelessWidget {
   const NotificationSection({super.key});

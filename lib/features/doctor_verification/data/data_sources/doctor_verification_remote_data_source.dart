@@ -1,5 +1,3 @@
-// lib/features/doctor_verification/data/data_sources/doctor_verification_remote_data_source.dart
-
 import 'package:admin_dashboard_graduation_project/core/network/api_service.dart';
 import 'package:admin_dashboard_graduation_project/features/doctor_verification/data/models/doctor_verification_response_model.dart';
 import '../models/verification_stats_model.dart';
@@ -30,7 +28,6 @@ class DoctorVerificationRemoteDataSourceImpl
       endpoint: 'admin/doctor-verifications',
       queryParameters: queryParams,
     );
-    // هنفترض إن "data" هي اللي شايلة لستة الدكاترة بعد التجميع
     return DoctorVerificationResponseModel.fromJson(response);
   }
 

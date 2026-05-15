@@ -1,5 +1,3 @@
-// lib/features/users/domain/entities/user_status_details_entity.dart
-
 class UserStatusDetailsEntity {
   final String? blockedByAdminName;
   final String? blockReason;

@@ -1,36 +1,5 @@
-// lib/features/users/data/models/user_response_model.dart
-
 import 'package:admin_dashboard_graduation_project/features/users/data/models/user_model.dart';
 import 'package:admin_dashboard_graduation_project/features/users/domain/entities/user_entity.dart';
-
-// class UserResponseModel {
-//   final List<UserModel> doctors;
-//   final List<UserModel> patients;
-//   final int totalUsers;
-//   final bool isSuccess;
-
-//   UserResponseModel({
-//     required this.doctors,
-//     required this.patients,
-//     required this.totalUsers,
-//     required this.isSuccess,
-//   });
-
-//   factory UserResponseModel.fromJson(Map<String, dynamic> json) {
-//     return UserResponseModel(
-//       isSuccess: json['isSuccess'] ?? false,
-//       totalUsers: json['totalUsers'] ?? 0,
-//       doctors: (json['doctors']['data'] as List)
-//           .map((i) => UserModel.fromJson(i, UserType.doctor))
-//           .toList(),
-//       patients: (json['patients']['data'] as List)
-//           .map((i) => UserModel.fromJson(i, UserType.patient))
-//           .toList(),
-//     );
-//   }
-// }
-
-// lib/features/users/data/models/user_response_model.dart
 
 class UserResponseModel {
   final PaginatedData doctors;
@@ -55,7 +24,6 @@ class UserResponseModel {
   }
 }
 
-// 💡 الصندوق اللي هيشيل الداتا والبيانات بتاعتها (صفحة كام، في بعدي ولا لأ)
 class PaginatedData {
   final List<UserModel> data;
   final int totalCount;

@@ -1,4 +1,3 @@
-// lib/features/dashboard/domain/models/nav_item_model.dart
 import 'package:admin_dashboard_graduation_project/core/routes/app_router.dart';
 import 'package:flutter/material.dart';
 

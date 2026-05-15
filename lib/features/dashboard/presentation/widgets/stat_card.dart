@@ -1,4 +1,3 @@
-// lib/features/dashboard/presentation/widgets/stat_card.dart
 import 'package:admin_dashboard_graduation_project/core/theme/app_colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -38,22 +37,9 @@ class StatCard extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade100),
       ),
       child: Column(
-        mainAxisSize: MainAxisSize.min, // خليه ياخد أقل مساحة ممكنة
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     Text(
-          //       title,
-          //       style: const TextStyle(
-          //         color: AppColors.textMuted,
-          //         fontSize: 14,
-          //       ),
-          //     ),
-          //     Icon(icon, color: AppColors.textMuted, size: 20),
-          //   ],
-          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -64,7 +50,6 @@ class StatCard extends StatelessWidget {
                   fontSize: 14,
                 ),
               ),
-              // الأيقونة بلونها الخاص
               Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
@@ -101,7 +86,6 @@ class StatCard extends StatelessWidget {
               ],
             ),
           const SizedBox(height: 16),
-          // الـ Sparkline (الرسم البياني الصغير أسفل الكارت)
           SizedBox(
             height: 40,
             child: LineChart(
@@ -109,30 +93,10 @@ class StatCard extends StatelessWidget {
                 gridData: FlGridData(show: false),
                 titlesData: FlTitlesData(show: false),
                 borderData: FlBorderData(show: false),
-                // lineBarsData: [
-                //   LineChartBarData(
-                //     spots: [
-                //       const FlSpot(0, 3),
-                //       const FlSpot(2, 4),
-                //       const FlSpot(4, 3.5),
-                //       const FlSpot(6, 5),
-                //       const FlSpot(8, 4.5),
-                //       const FlSpot(10, 6),
-                //     ],
-                //     isCurved: true,
-                //     color: chartColor,
-                //     barWidth: 2,
-                //     isStrokeCapRound: true,
-                //     dotData: FlDotData(show: false),
-                //     belowBarData: BarAreaData(
-                //       show: true,
-                //       color: chartColor.withValues(alpha: 0.1),
-                //     ),
-                //   ),
-                // ],
+
                 lineBarsData: [
                   LineChartBarData(
-                    spots: spots, // 🚀 الداتا الحقيقية بقت هنا
+                    spots: spots,
                     isCurved: true,
                     color: chartColor,
                     barWidth: 2,

@@ -1,11 +1,3 @@
-// lib/features/dashboard/presentation/pages/dashboard_overview_page.dart
-import 'dart:developer';
-
-import 'package:admin_dashboard_graduation_project/core/di/injection_container.dart';
-import 'package:admin_dashboard_graduation_project/core/di/secure_storage_helper.dart';
-import 'package:admin_dashboard_graduation_project/core/di/session_manager.dart';
-import 'package:admin_dashboard_graduation_project/core/services/signalr_service.dart';
-import 'package:admin_dashboard_graduation_project/features/auth/data/data_sources/auth_remote_data_source.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/domain/entities/dashboard_overview_entity.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/cubit/dashboard_cubit/dashboard_cubit.dart';
 import 'package:admin_dashboard_graduation_project/features/dashboard/presentation/cubit/dashboard_cubit/dashboard_state.dart';
@@ -26,25 +18,8 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
   // @override
   @override
   void initState() {
-    super.initState(); // 💡 دايماً ابدأ بـ super.initState()
-
-    // نداء ميثود الـ Init في الخلفية
-    // _setupSignalR();
+    super.initState();
   }
-
-  // void _setupSignalR() async {
-  //   try {
-  //     final token = await SecureStorageHelper.getAccessToken();
-  //     if (token != null) {
-  //       await sl<SignalRService>().init(token);
-  //       print("🚀 SignalR Initialized from Dashboard");
-  //     } else {
-  //       print("⚠️ No token found for SignalR");
-  //     }
-  //   } catch (e) {
-  //     print("❌ SignalR Init Error: $e");
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -53,11 +28,9 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
         if (state is DashboardLoading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state is DashboardFailure) {
-          return Center(
-            child: Text(state.errMessage),
-          ); // ممكن تحط زرار Retry هنا
+          return Center(child: Text(state.errMessage));
         } else if (state is DashboardSuccess) {
-          final overview = state.overview; // الداتا الحقيقية وصلت هنا
+          final overview = state.overview;
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(24),
@@ -70,12 +43,10 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
                 ),
                 const SizedBox(height: 24),
 
-                // 1. قسم الكروت (Statistics)
                 _buildStatsGrid(overview),
 
                 const SizedBox(height: 32),
 
-                // 2. قسم الجداول (Recent Activity)
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -84,7 +55,6 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
                       child: ActivityFeed(actions: overview.recentActions),
                     ),
                     const SizedBox(width: 24),
-                    // هنا ممكن تحط الـ Chart بتاعك
                     Expanded(
                       flex: 1,
                       child: RegistrationTrendsChart(
@@ -116,7 +86,7 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
           title: "Total Users",
           value: overview.userStats.totalUsers.toString(),
           trend: overview.userStats.lastSevenDaysTrend,
-          change: overview.userStats.percentageChange, // 🚀 داتا حقيقية
+          change: overview.userStats.percentageChange,
           icon: Icons.people_alt_rounded,
           iconColor: Colors.blue,
           chartColor: Colors.blue,
@@ -124,7 +94,7 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
         StatCard(
           title: "Verified Doctors",
           value: overview.doctorStats.verifiedDoctors.toString(),
-          change: overview.doctorStats.percentageChange, // 🚀 داتا حقيقية
+          change: overview.doctorStats.percentageChange,
           icon: Icons.verified_user_rounded,
           trend: overview.doctorStats.lastSevenDaysTrend,
           iconColor: Colors.teal,
@@ -133,9 +103,8 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
         StatCard(
           title: "Pending Verifications",
           value: overview.doctorStats.pendingVerification.toString(),
-          // ملهاش نسبة مئوية في الـ JSON فبنسيب الـ change بـ null
           icon: Icons.pending_actions_rounded,
-          change: overview.verificationStats.percentageChange, // 🚀 داتا حقيقية
+          change: overview.verificationStats.percentageChange,
           trend: overview.verificationStats.lastSevenDaysTrend,
           iconColor: Colors.orange,
           chartColor: Colors.orange,
@@ -143,9 +112,8 @@ class _DashboardOverviewPageState extends State<DashboardOverviewPage> {
         StatCard(
           title: "Closed Tickets",
           value: overview.ticketStats.closedTickets.toString(),
-          // لو حابب تحسب النسبة يدوي أو تسيبها null حالياً
           icon: Icons.task_alt_rounded,
-          change: overview.ticketStats.percentageChange, // 🚀 داتا حقيقية
+          change: overview.ticketStats.percentageChange,
           trend: overview.ticketStats.lastSevenDaysTrend,
           iconColor: Colors.purple,
           chartColor: Colors.purple,

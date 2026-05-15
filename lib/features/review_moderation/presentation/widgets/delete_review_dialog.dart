@@ -1,5 +1,3 @@
-// features/review_moderation/presentation/widgets/delete_review_dialog.dart
-
 import 'package:flutter/material.dart';
 
 class DeleteReviewDialog extends StatefulWidget {

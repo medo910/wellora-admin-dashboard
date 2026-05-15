@@ -12,8 +12,6 @@ enum SessionStatus { valid, invalid, error }
 class SessionManager extends ChangeNotifier {
   final AuthRepository _authRepository;
 
-  // ✅ متغير لتخزين الـ ID في الذاكرة (Memory Cache)
-
   String? _cachedUserId;
 
   String? _cachedName;
@@ -21,8 +19,6 @@ class SessionManager extends ChangeNotifier {
   String? _cachedRole;
 
   SessionManager(this._authRepository);
-
-  // ✅ Getter للحصول على الـ ID فوراً بدون Future
 
   String get userId => _cachedUserId ?? '';
 
@@ -49,8 +45,6 @@ class SessionManager extends ChangeNotifier {
       if (accessToken == null || refreshToken == null) {
         return SessionStatus.invalid;
       }
-
-      // ✅ تحميل الـ ID من الـ Storage للذاكرة بمجرد التأكد من وجود التوكنز
 
       _cachedUserId = await SecureStorageHelper.getUserId();
 
@@ -96,7 +90,7 @@ class SessionManager extends ChangeNotifier {
 
           await SecureStorageHelper.clearAll();
 
-          _cachedUserId = null; // تفريغ الـ ID عند الفشل
+          _cachedUserId = null;
 
           _cachedName = null;
 
@@ -140,8 +134,6 @@ class SessionManager extends ChangeNotifier {
     );
 
     Map<String, dynamic> payload = JwtDecoder.decode(tokenModel.accessToken);
-
-    // ✅ استخراج الـ ID وتحديث الكاش فوراً
 
     final String newUserId = (payload['UserID'] ?? payload['uid'] ?? '')
         .toString();

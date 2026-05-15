@@ -1,4 +1,3 @@
-// features/review_moderation/domain/entities/review_entity.dart
 import 'package:equatable/equatable.dart';
 
 class ReviewEntity extends Equatable {
@@ -38,7 +37,6 @@ class ReviewEntity extends Equatable {
   List<Object?> get props => [reviewId, isDeleted];
 }
 
-// كيان منفصل للـ Pagination
 class ReviewsPaginatedEntity {
   final List<ReviewEntity> reviews;
   final int totalCount;

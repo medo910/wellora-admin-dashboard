@@ -20,7 +20,6 @@ class ReviewAppBar extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             children: [
-              // زرار الفلتر المتقدم (اللي هيفتح الـ FilterSheet)
               IconButton(
                 icon: const Icon(Icons.tune),
                 onPressed: () => _openAdvancedFilters(context),
@@ -33,22 +32,20 @@ class ReviewAppBar extends StatelessWidget {
     );
   }
 
-  // في ملف review_app_bar.dart
-
   void _openAdvancedFilters(BuildContext context) {
     final state = context.read<ReviewModerationCubit>().state;
 
     if (state is ReviewSuccess) {
       showModalBottomSheet(
         context: context,
-        isScrollControlled: true, // 🚀 مهم عشان الكيبورد
+        isScrollControlled: true,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         builder: (_) => BlocProvider.value(
           value: context.read<ReviewModerationCubit>(),
           child: ReviewFilterSheet(
-            initialDoctorId: state.currentDoctorId, // 🚀 بنبعت القيم الحالية
+            initialDoctorId: state.currentDoctorId,
             initialUserId: state.currentUserId,
             initialMinR: state.minRating,
             initialMaxR: state.maxRating,
